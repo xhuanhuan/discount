@@ -3,7 +3,6 @@ var jwt = require('../models/jwt_auth');
 var router = express.Router();
 var user=require('../models/user');
 var shop=require('../models/shop');
-var shop=require('../models/shop');
 var activity=require('../models/activity');
 
 var shopInfo={};

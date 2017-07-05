@@ -182,7 +182,9 @@ import ajax from '../utils/ajax';
           this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId}})
         },
         toCurrentActivity: function(activityId){
-            this.$router.push({path:'/activity?id='+activityId})
+            var userId=this.personal.userInfo._id
+            var userName=this.personal.userInfo.username
+            this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
         },
         logOut: function () {
           window.localStorage.discountToken=''

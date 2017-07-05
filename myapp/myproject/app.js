@@ -11,6 +11,7 @@ var login = require('./routes/login');
 var register = require('./routes/register');
 var personal = require('./routes/personal');
 var shop = require('./routes/shop');
+var activity = require('./routes/activity');
 // var mondodb=require('./models/user');
 
 var app = express();
@@ -37,6 +38,7 @@ app.use('/register', register);
 app.use('/login', login);
 app.use('/personal', personal);
 app.use('/shop', shop);
+app.use('/activity', activity);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
