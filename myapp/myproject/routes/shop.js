@@ -9,6 +9,7 @@ var activity=require('../models/activity');
 var shopInfo={};
 var activities=[];
 var data={};
+
 router.post('/',function(req, res, next){
   data=JSON.parse(Object.keys(req.body)[0]);
   shop.findOne({_id:data.shopId},function(err,doc){
