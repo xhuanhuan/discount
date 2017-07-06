@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div v-if="loading">
     <div v-if='loading'>
       <transition name='loading-done'>
       <div class='loading'>
@@ -8,82 +8,82 @@
       </div>
       </transition>
     </div>
-    <div v-else>
-      <div class="setandsistem">
-        <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
-        <Icon class="bell" size=20 type="ios-bell"></Icon>
+  </div>
+  <div v-else>
+    <div class="setandsistem">
+      <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
+      <Icon class="bell" size=20 type="ios-bell"></Icon>
+    </div>
+    <transition name="setPart">
+    <div class="setPart" v-if="setShow">
+      <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
+      <Collapse style="border-left:none;border-right:none;">
+        <Panel name="1">
+          个人资料
+          <ul slot="content">
+            <li><span>头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.coverimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>性别</span>
+              <Select style="width:180px" :value="personal.userInfo.personalinfo.sex">
+                <Option value="男" key="1">男</Option><Option value="女" key="2">女</Option>
+              </Select>
+            </li>
+            <li><span>生辰</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
+            <li><span>常驻</span>
+              <Select style="width:180px" :value="personal.userInfo.location">
+                <Option value="北京" key="1">北京</Option>
+                <Option value="深圳" key="2">深圳</Option>
+                <Option value="西安" key="3">西安</Option>
+              </Select>
+            </li>
+          </ul>
+        </Panel>
+        <Panel name="2">我的店铺
+          <ul slot="content">
+            <li><span>店铺头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>店铺名称</span><p>earth music旗舰店</p></li>
+            <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
+            <li><router-link to="/shop" style="width:100%;display:flex;justify-content:space-between"><span>去店铺首页</span><Icon type="chevron-right"></Icon></router-link></li>
+          </ul>
+        </Panel>
+      </Collapse>
+      <div class="log-out">
+        <Button long type="warning" @click="logOut">退出当前登录</Button>
       </div>
-      <transition name="setPart">
-      <div class="setPart" v-if="setShow">
-        <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
-        <Collapse style="border-left:none;border-right:none;">
-          <Panel name="1">
-            个人资料
-            <ul slot="content">
-              <li><span>头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-              <li><span>背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.coverimg" /><Icon size=20 type="camera"></Icon></li>
-              <li><span>性别</span>
-                <Select style="width:180px" :value="personal.userInfo.personalinfo.sex">
-                  <Option value="男" key="1">男</Option><Option value="女" key="2">女</Option>
-                </Select>
-              </li>
-              <li><span>生辰</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
-              <li><span>常驻</span>
-                <Select style="width:180px" :value="personal.userInfo.location">
-                  <Option value="北京" key="1">北京</Option>
-                  <Option value="深圳" key="2">深圳</Option>
-                  <Option value="西安" key="3">西安</Option>
-                </Select>
-              </li>
-            </ul>
-          </Panel>
-          <Panel name="2">我的店铺
-            <ul slot="content">
-              <li><span>店铺头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-              <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-              <li><span>店铺名称</span><p>earth music旗舰店</p></li>
-              <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
-              <li><router-link to="/shop" style="width:100%;display:flex;justify-content:space-between"><span>去店铺首页</span><Icon type="chevron-right"></Icon></router-link></li>
-            </ul>
-          </Panel>
-        </Collapse>
-        <div class="log-out">
-          <Button long type="warning" @click="logOut">退出当前登录</Button>
-        </div>
+    </div>
+    </transition>
+    <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
+      <span class="username">{{personal.userInfo.username}}</span>
+      <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
+    </div>
+    <div class="user-info">
+    <Menu mode="horizontal" :active-name="sellected" style="display:flex;justify-content: space-around;">
+        <Menu-item name="1">
+          <div v-on:click="sellected = 1">
+            <Icon type="eye"></Icon>
+            我的关注
+          </div>
+        </Menu-item>
+        <div style="width:1px;height:100%;border-left:1px solid rgb(200, 224, 228);"></div>
+        <Menu-item name="2">
+          <div v-on:click="sellected = 2">
+            <Icon type="android-checkmark-circle"></Icon>
+            我的收藏
+          </div>
+        </Menu-item>
+      </Menu>
+    </div>
+    <div class="app-content" v-if="sellected === 1">
+      <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toShopPage(item.shopId)">
+      <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
       </div>
-      </transition>
-      <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
-        <span class="username">{{personal.userInfo.username}}</span>
-        <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
-      </div>
-      <div class="user-info">
-      <Menu mode="horizontal" :active-name="sellected" style="display:flex;justify-content: space-around;">
-          <Menu-item name="1">
-            <div v-on:click="sellected = 1">
-              <Icon type="eye"></Icon>
-              我的关注
-            </div>
-          </Menu-item>
-          <div style="width:1px;height:100%;border-left:1px solid rgb(200, 224, 228);"></div>
-          <Menu-item name="2">
-            <div v-on:click="sellected = 2">
-              <Icon type="android-checkmark-circle"></Icon>
-              我的收藏
-            </div>
-          </Menu-item>
-        </Menu>
-      </div>
-      <div class="app-content" v-if="sellected === 1">
-        <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toCurrentShop(item.shopId)">
-        <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
-        </div>
-      </div>
-      <div class="app-content" v-else>
-        <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toCurrentActivity(item.activityId)">
-        <Collects :activityInfo="item"
-                  v-on:remove="removeActivity(index)"
-                  v-on:toShop="toCurrentShop(item.shopId)"></Collects>
-        </div>
+    </div>
+    <div class="app-content" v-else>
+      <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toActivityPage(item.activityId)">
+      <Collects :activityInfo="item"
+                v-on:remove="removeActivity(index)"
+                v-on:toShop="toShopPage(item.shopId)"></Collects>
       </div>
     </div>
     <footer-Component></footer-Component>
@@ -164,7 +164,6 @@ import ajax from '../utils/ajax';
         }
       },
       created: function(){
-        console.log('executed')
         var that=this
         let data={
           userNameToken:localStorage.discountToken
@@ -174,9 +173,6 @@ import ajax from '../utils/ajax';
           var data=JSON.parse(res)
           that.personal=data
           console.log(that.personal)
-          setTimeout(function(){
-            that.loading=false
-          },1000)
         }
         ajax(data,url,'post',handler)
       },
@@ -189,11 +185,12 @@ import ajax from '../utils/ajax';
           this.personal.userInfo.activityid.splice(index,1)
           this.personal.activitiesInfo.splice(index,1)
         },
-        toCurrentShop: function(shopId){
+        toShopPage: function(shopId){
           var userId=this.personal.userInfo._id
-          this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId}})
+          var userName=this.personal.userInfo.username
+          this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
         },
-        toCurrentActivity: function(activityId){
+        toActivityPage: function(activityId){
             var userId=this.personal.userInfo._id
             var userName=this.personal.userInfo.username
             this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
@@ -205,7 +202,6 @@ import ajax from '../utils/ajax';
       },
       data () {
         return {
-          loading:true,
           personal:{},
           sellected: '2',
           setShow: false

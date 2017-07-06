@@ -3,6 +3,7 @@ var router = express.Router();
 var activity=require('../models/activity');
 
 router.post('/',function(req, res, next){
+  var info={};
   res.set('Access-Control-Allow-Origin', '*');
   data=JSON.parse(Object.keys(req.body)[0]);
   activity.findOne({_id:data.activityId},function(err,doc){
@@ -31,13 +32,9 @@ router.post('/',function(req, res, next){
         doc.statics.comments.push(data.comment)
       }
       doc.save()
-      var info = {
-        setactivityInfo:'success',
-      }
+      info.setactivityInfo='success'
     }else{
-      var info = {
-        setactivityInfo:'fail',
-      }
+      info.setactivityInfo='fail'
     }
     res.send(JSON.stringify(info));
   })

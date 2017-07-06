@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="activity-header">
-      <span v-on:click="hide"><Icon type="close" size=20></Icon></span>
+      <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
       <span class="shopName">{{activityInfo.shopname}}</span>
     </div>
     <div class="acti-body">
@@ -34,10 +34,10 @@
       </div>
       <div class="div2" v-if="Object.keys(activityInfo).length>0">
       <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
-      <span :class="staticactive"
+      <span :class="isLikeTmp?staticactive:''"
             v-on:click="changeActivityInfo(userId,'likes')">
              <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
-      <span :class="collectActive"
+      <span :class="isCollectedTmp?staticactive:''"
             v-on:click="changeActivityInfo(userId,'collections')">
             <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
       <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
@@ -60,7 +60,7 @@
 }
 .shopName{
   font-size: 1.2rem;
-  margin-left: 1.5rem;
+  margin-left:10px;
 }
 .acti-body{
   margin-top: 3rem;
@@ -119,6 +119,9 @@
   flex-grow: 1;
   display:flex;justify-content: space-around;
 }
+.staticactive{
+  color:orange;
+}
 </style>
 <script>
 import ajax from '../utils/ajax';
@@ -128,28 +131,24 @@ export default {
     changeActivityInfo:function(userId,note){
       clearTimeout(this.timer)
       if(note==='likes'){
+        this.isLikeTmp=!this.isLikeTmp
         let index=this.activityInfo.statics.likes.indexOf(userId)
         if(index>-1){
           this.activityInfo.statics.likes.splice(index,1)
-          this.likeActive={}
         }else{
           this.activityInfo.statics.likes.push(userId)
-          this.likeActive=this.active
         }
       }else if(note==='collections'){
+        this.isCollectedTmp=!this.isCollectedTmp
         let index=this.activityInfo.statics.collections.indexOf(userId)
         if(index>-1){
           this.activityInfo.statics.collections.splice(index,1)
-          this.likeActive={}
         }else{
           this.activityInfo.statics.collections.push(userId)
-          this.likeActive=this.active
         }
       }
       var that=this
       this.timer=setTimeout(function(){
-        var isLike=that.activityInfo.statics.likes.indexOf(that.userId)>-1?true:false
-        var isCollected=that.activityInfo.statics.collections.indexOf(that.userId)>-1?true:false
         var data={
           isLikesChange:false,
           isCollectionsChange:false,
@@ -162,13 +161,14 @@ export default {
           var data=JSON.parse(res)
           console.log(data)
         }
-        if(isLike!==that.isLike){
+        if(that.isLike!==that.isLikeTmp){
           data.isLikesChange=true
+          that.isLike=that.isLikeTmp
         }
-        if(isCollected!==that.isCollected){
+        if(that.isCollected!==that.isCollectedTmp){
           data.isCollectionsChange=true
+          that.isCollected=that.isCollectedTmp
         }
-        console.log(data.isLikesChange||data.isCollectionsChange)
         if(data.isLikesChange||data.isCollectionsChange){
           ajax(data,url,'post',handler)
         }
@@ -179,6 +179,7 @@ export default {
       if(this.commentTarget!==this.userName){
         this.placeholder=this.userName+'回复'+this.commentTarget+':'
       }else{
+          this.commentTarget=''
           this.placeholder='评论'
       }
     },
@@ -210,15 +211,14 @@ export default {
         this.commentTarget=''
       }
     },
-    hide: function(){
-      this.$emit('hide')
+    back: function(){
+      this.$router.go(-1)
     }
   },
   created:function(){
     this.activityId=this.$route.query.id;
     this.userId=this.$route.params.userId
     this.userName=this.$route.params.userName
-    // this.currentComment.speaker=this.$route.params.userName
     var that=this
     var data={
       activityId:this.activityId,
@@ -231,8 +231,8 @@ export default {
       that.activityInfo=data.activityInfo
       that.isLike=data.isLike
       that.isCollected=data.isCollected
-      that.likeActive=that.isLike?that.active:{}
-      that.collectActive=that.isCollected?that.active:{}
+      that.isLikeTmp=data.isLike
+      that.isCollectedTmp=data.isCollected
       console.log(data)
     }
     ajax(data,url,'post',handler)
@@ -243,6 +243,8 @@ export default {
       activityInfo:{},
       isLike:false,
       isCollected:false,
+      isLikeTmp:false,
+      isCollectedTmp:false,
       activityId:'',
       userId:'',
       userName:'',
@@ -255,9 +257,7 @@ export default {
       },
       placeholder:'评论',
       showNote: true,
-      likeActive:{},
-      collectActive:{},
-      staticactive:{'active':{'color':'orange'}}
+      staticactive:'staticactive'
     }
   }
 }

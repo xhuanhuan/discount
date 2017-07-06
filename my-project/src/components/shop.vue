@@ -1,8 +1,8 @@
 <template>
   <div class="shop-container" v-if="!showMap">
     <div class="shop-back">
-      <span v-on:click="hide">
-        <Icon type="close" size=20></Icon>
+      <span v-on:click="back">
+        <Icon type="arrow-left-c" size=20></Icon>店铺页面
       </span>
     </div>
     <div class="shop-header" >
@@ -29,7 +29,7 @@
     </div>
     <div class="activity-header">活动</div>
     <div v-for="(item, index) in activities">
-    <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item)" v-on:remove="removeCollects(index)"></Collects>
+    <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)" v-on:remove="removeCollects(index)"></Collects>
     </div>
   </div>
   <div v-else><map-Component :addressInfo="shopInfo.location" v-on:hide="showMap=false"></map-Component></div>
@@ -127,15 +127,19 @@ import map from './map'
       data () {
         return {
           shopInfo:{},
+          userId:'',
+          userName:'',
           activities:[],
           isFans:false,
           showMap:false,
-          activity: {}
         }
       },
       created:function(){
         var shopId=this.$route.query.id;
         var userId=this.$route.params.userId
+        var userName=this.$route.params.userName
+        this.userId=userId
+        this.userName=userName
         var that=this
         var data={
           shopId:shopId,
@@ -158,18 +162,16 @@ import map from './map'
         ajax(data,url,'post',handler)
       },
       methods: {
-        hide: function(){
-          this.$emit('hide')
+        back: function(){
+          this.$router.go(-1)
         },
         removeCollects: function (index) {
           var activities=[].slice.call(this.shopInfo.activities)
           activities.splice(index,1)
           this.shopInfo.activities=activities
         },
-        toActivitiyPage: function (item) {
-          item.watchs++
-          this.activity=item
-          this.showActivity=true
+        toActivitiyPage: function (activityId) {
+          this.$router.push({name:'activity',query:{id:activityId},params:{userId:this.userId,userName:this.userName}})
         },
         togglefollowed: function () {
           this.followed=!this.followed
