@@ -154,9 +154,6 @@ import ajax from '../utils/ajax';
         }
       },
       created: function(){
-        if(window.localStorage.discountToken === undefined){
-          this.$router.push({path:'/login'})
-        }
         var that=this
         let data={
           userNameToken:localStorage.discountToken

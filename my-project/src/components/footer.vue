@@ -13,7 +13,7 @@
         发布
       </Menu-item>
     </router-link>
-    <router-link to="/personal">
+    <router-link :to="personal">
       <Menu-item name="3">
           <Icon type="person"></Icon>
           我的
@@ -34,6 +34,13 @@
             case '#/personal':active='3';break;
           }
           return active
+        },
+        personal:function(){
+          if(window.localStorage.discountToken){
+            return "/personl"
+          }else{
+            return '/login'
+          }
         }
     }
   }
