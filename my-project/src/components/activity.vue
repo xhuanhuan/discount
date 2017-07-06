@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="comments-header">全部评论</div>
-    <div class="comments">
+    <div class="comments" v-if="Object.keys(activityInfo).length>0">
       <div class="comments-line" v-for="(comment,index) in activityInfo.statics.comments" v-on:click="answear(comment)">
         <span class="person">{{ comment.speaker}}</span>
         <span v-if="comment.accept.length>0">回复</span>
@@ -24,7 +24,7 @@
     </div>
     <div class="activity-footer">
       <div>
-        <Input v-model="currentComment.content" :placeholder="placeholder">
+        <Input v-model="commentContent" :placeholder="placeholder">
           <span slot="append" v-on:click="enterComment">
             <Tooltip placement="top" content="输入不能为空" :disabled="showNote">
               <Icon type="chatbubble-working"></Icon>
@@ -32,18 +32,16 @@
             </span>
         </Input>
       </div>
-      <span><Icon type="eye"></Icon>{{activityInfo.watchs}}</span>
-      <span v-if="activityInfo.statics.likes.indexOf(userId)>-1"
-            v-on:click="activityInfo.statics.likes.splice(activityInfo.statics.likes.indexOf(userId),1)"
-            style="color:orange"><Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
-      <span v-on:click="activityInfo.statics.likes.push(userId)"
-            v-else><Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
-      <span v-on:click="activityInfo.statics.collections.splice(activityInfo.statics.collections.indexOf(userId),1)"
-            v-if="activityInfo.statics.collections.indexOf(userId)>-1"
-            style="color:orange"><Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
-      <span v-on:click="activityInfo.statics.collections.push(userId)"
-            v-else><Icon type="android-favorite-outline"></Icon>{{activityInfo.statics.collections.length}}</span>
+      <div class="div2" v-if="Object.keys(activityInfo).length>0">
+      <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
+      <span :class="staticactive"
+            v-on:click="changeActivityInfo(userId,'likes')">
+             <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
+      <span :class="collectActive"
+            v-on:click="changeActivityInfo(userId,'collections')">
+            <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
       <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
+    </div>
     </div>
   </div>
 </template>
@@ -117,25 +115,98 @@
   border-top: 1px solid #d7dde4;
   z-index: 1002;
 }
+.activity-footer .div2{
+  flex-grow: 1;
+  display:flex;justify-content: space-around;
+}
 </style>
 <script>
 import ajax from '../utils/ajax';
 export default {
   name: 'activity',
   methods: {
+    changeActivityInfo:function(userId,note){
+      clearTimeout(this.timer)
+      if(note==='likes'){
+        let index=this.activityInfo.statics.likes.indexOf(userId)
+        if(index>-1){
+          this.activityInfo.statics.likes.splice(index,1)
+          this.likeActive={}
+        }else{
+          this.activityInfo.statics.likes.push(userId)
+          this.likeActive=this.active
+        }
+      }else if(note==='collections'){
+        let index=this.activityInfo.statics.collections.indexOf(userId)
+        if(index>-1){
+          this.activityInfo.statics.collections.splice(index,1)
+          this.likeActive={}
+        }else{
+          this.activityInfo.statics.collections.push(userId)
+          this.likeActive=this.active
+        }
+      }
+      var that=this
+      this.timer=setTimeout(function(){
+        var isLike=that.activityInfo.statics.likes.indexOf(that.userId)>-1?true:false
+        var isCollected=that.activityInfo.statics.collections.indexOf(that.userId)>-1?true:false
+        var data={
+          isLikesChange:false,
+          isCollectionsChange:false,
+          isCommentsChange:false,
+          activityId:that.activityId,
+          userId:that.userId
+        }
+        var url='http://localhost:3000/setActivityStatics';
+        var handler=function(res){
+          var data=JSON.parse(res)
+          console.log(data)
+        }
+        if(isLike!==that.isLike){
+          data.isLikesChange=true
+        }
+        if(isCollected!==that.isCollected){
+          data.isCollectionsChange=true
+        }
+        console.log(data.isLikesChange||data.isCollectionsChange)
+        if(data.isLikesChange||data.isCollectionsChange){
+          ajax(data,url,'post',handler)
+        }
+      },2000)
+    },
     answear: function (comment) {
-      this.currentComment.accept=comment.speaker
-      if(this.currentComment.accept!==this.currentComment.speaker){
-        this.placeholder=this.currentComment.speaker+'回复'+this.currentComment.accept+':'
+      this.commentTarget=comment.speaker
+      if(this.commentTarget!==this.userName){
+        this.placeholder=this.userName+'回复'+this.commentTarget+':'
+      }else{
+          this.placeholder='评论'
       }
     },
     enterComment: function () {
-      if(!this.currentComment.content){
+      if(!this.commentContent){
         this.showNote=false
       }else{
         this.showNote=true
-        this.activityInfo.statics.comments.push(this.currentComment)
-        this.currentComment={}
+        var comment={
+          speaker: this.userName,
+          accept:this.commentTarget,
+          content:this.commentContent
+        }
+        this.activityInfo.statics.comments.push(comment)
+        var data={
+          isCommentsChange:true,
+          comment:comment,
+          activityId:this.activityId,
+          userId:this.userId
+        }
+        var url='http://localhost:3000/setActivityStatics';
+        var handler=function(res){
+          var data=JSON.parse(res)
+          console.log(data)
+        }
+        ajax(data,url,'post',handler)
+        this.placeholder='评论'
+        this.commentContent=''
         this.commentTarget=''
       }
     },
@@ -147,7 +218,7 @@ export default {
     this.activityId=this.$route.query.id;
     this.userId=this.$route.params.userId
     this.userName=this.$route.params.userName
-    this.currentComment.speaker=this.$route.params.userName
+    // this.currentComment.speaker=this.$route.params.userName
     var that=this
     var data={
       activityId:this.activityId,
@@ -158,13 +229,20 @@ export default {
     var handler=function(res){
       var data=JSON.parse(res)
       that.activityInfo=data.activityInfo
+      that.isLike=data.isLike
+      that.isCollected=data.isCollected
+      that.likeActive=that.isLike?that.active:{}
+      that.collectActive=that.isCollected?that.active:{}
       console.log(data)
     }
     ajax(data,url,'post',handler)
   },
   data () {
     return {
+      timer:null,
       activityInfo:{},
+      isLike:false,
+      isCollected:false,
       activityId:'',
       userId:'',
       userName:'',
@@ -176,7 +254,10 @@ export default {
         content:''
       },
       placeholder:'评论',
-      showNote: true
+      showNote: true,
+      likeActive:{},
+      collectActive:{},
+      staticactive:{'active':{'color':'orange'}}
     }
   }
 }
