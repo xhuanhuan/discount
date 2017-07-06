@@ -1,13 +1,12 @@
 <template>
-  <div v-if="loading">
-    <div v-if='loading'>
-      <transition name='loading-done'>
-      <div class='loading'>
-        <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
-        <div class='loading-text'>加载中</div>
-      </div>
-      </transition>
+<div>
+  <div v-if='loading'>
+    <transition name='loading-done'>
+    <div class='loading'>
+      <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
+      <div class='loading-text'>加载中</div>
     </div>
+    </transition>
   </div>
   <div v-else>
     <div class="setandsistem">
@@ -86,8 +85,9 @@
                 v-on:toShop="toShopPage(item.shopId)"></Collects>
       </div>
     </div>
-    <footer-Component></footer-Component>
   </div>
+  <footer-Component></footer-Component>
+</div>
 </template>
 <script>
 import activity from './activity'
@@ -173,6 +173,9 @@ import ajax from '../utils/ajax';
           var data=JSON.parse(res)
           that.personal=data
           console.log(that.personal)
+          setTimeout(function(){
+            that.loading = false
+          },1000)
         }
         ajax(data,url,'post',handler)
       },
@@ -202,6 +205,7 @@ import ajax from '../utils/ajax';
       },
       data () {
         return {
+          loading:true,
           personal:{},
           sellected: '2',
           setShow: false
