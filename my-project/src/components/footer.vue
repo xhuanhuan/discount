@@ -37,7 +37,7 @@
         },
         personal:function(){
           if(window.localStorage.discountToken){
-            return "/personl"
+            return "/personal"
           }else{
             return '/login'
           }

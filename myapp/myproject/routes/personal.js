@@ -31,7 +31,6 @@ router.post('/',function(req, res, next){
 });
 router.post('/',function(req, res, next){
   var shopsInfo=[];
-  console.log(D)
   D.userInfo.shopid.forEach(function(shopid,index){
     shop.findOne({_id:shopid},function(err,doc){
       if(err){
@@ -46,6 +45,7 @@ router.post('/',function(req, res, next){
       }
       if(index===D.userInfo.shopid.length-1){
         D.shopsInfo=shopsInfo
+        console.log(D)
         next()
       }
     })
