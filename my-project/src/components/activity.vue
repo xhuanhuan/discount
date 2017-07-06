@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="activity-header">
-      <span v-on:click="hide"><Icon type="close" size=20></Icon></span>
+      <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
       <span class="shopName">{{activityInfo.shopname}}</span>
     </div>
     <div class="acti-body">
@@ -60,7 +60,7 @@
 }
 .shopName{
   font-size: 1.2rem;
-  margin-left: 1.5rem;
+  margin-left:10px;
 }
 .acti-body{
   margin-top: 3rem;
@@ -211,8 +211,8 @@ export default {
         this.commentTarget=''
       }
     },
-    hide: function(){
-      this.$emit('hide')
+    back: function(){
+      this.$router.go(-1)
     }
   },
   created:function(){

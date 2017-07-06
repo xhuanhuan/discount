@@ -67,15 +67,15 @@
       </Menu>
     </div>
     <div class="app-content" v-if="sellected === 1">
-      <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toCurrentShop(item.shopId)">
+      <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toShopPage(item.shopId)">
       <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
       </div>
     </div>
     <div class="app-content" v-else>
-      <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toCurrentActivity(item.activityId)">
+      <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toActivityPage(item.activityId)">
       <Collects :activityInfo="item"
                 v-on:remove="removeActivity(index)"
-                v-on:toShop="toCurrentShop(item.shopId)"></Collects>
+                v-on:toShop="toShopPage(item.shopId)"></Collects>
       </div>
     </div>
     <footer-Component></footer-Component>
@@ -177,11 +177,12 @@ import ajax from '../utils/ajax';
           this.personal.userInfo.activityid.splice(index,1)
           this.personal.activitiesInfo.splice(index,1)
         },
-        toCurrentShop: function(shopId){
+        toShopPage: function(shopId){
           var userId=this.personal.userInfo._id
-          this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId}})
+          var userName=this.personal.userInfo.username
+          this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
         },
-        toCurrentActivity: function(activityId){
+        toActivityPage: function(activityId){
             var userId=this.personal.userInfo._id
             var userName=this.personal.userInfo.username
             this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
