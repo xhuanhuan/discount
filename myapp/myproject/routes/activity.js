@@ -1,44 +1,48 @@
 var express = require('express');
+var jwt = require('../models/jwt_auth');
 var router = express.Router();
+var user=require('../models/user');
 var activity=require('../models/activity');
-var userinfo = require('../models/user');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-	activity.find({}, function (err, docs) {
-		req.result1 = docs;
-	    next();
-	});
+router.post('/',function(req, res, next){
+  res.set('Access-Control-Allow-Origin', '*');
+  req.dataGet=JSON.parse(Object.keys(req.body)[0]);
+  activity.findOne({_id:req.dataGet.activityId},function(err,doc){
+    if(err){
+      next(err);
+    }
+    if(doc){  console.log(doc)
+      req.info = {
+        getactivityInfo: 'success',
+        activityInfo: doc
+      }
+    }else{
+      req.info = {
+        getactivityInfo: 'fail',
+        activityInfo: '店铺不存在'
+      }
+    }
+    next()
+  })
 });
-router.get('/',function(req,res,next){
-    res.send(JSON.stringify(req.result1)+JSON.stringify(req.query));
+router.post('/',function(req, res, next){
+  var activityInfo=req.info.activityInfo
+  var userId=req.dataGet.userId
+  var isLike=activityInfo.statics.likes.indexOf(userId)>-1?true:false
+  var isCollected=activityInfo.statics.collections.indexOf(userId)>-1?true:false
+  req.info.isLike=isLike
+  req.info.isCollected=isCollected
+  res.send(JSON.stringify(req.info));
+});
+router.post(function(err,req, res, next) {
+  let info = {
+    getactivityInfo:'err',
+    activityInfo:'something wrong'
+  }
+  console.log(err)
+  // res.status(500);
+  // res.render('error', { error: err });
+  res.set('Access-Control-Allow-Origin', '*');
+  res.send(JSON.stringify(info));
 })
-
-//解读x-www-form-urlencoded信息,重新解读req.body
-router.post('/',function(req,res,next){
-	req.body = JSON.parse(Object.keys(req.body)[0]);
-	next();
-})
-router.post('/',function(req,res,next){
-	activity.find({}, function (err, docs) {
-		req.result1 = docs;
-	    next();
-	});
-})
-router.post('/',function(req,res,next){
-	var info = {};
-	if(req.body.username){
-        userinfo.find({username:req.body.username},function(err,docs){
-        	req.result2 = docs[0];
-        	info.activityinfo = req.result1;
-        	info.userinfo = req.result2;
-        	res.send(JSON.stringify(info));
-        })
-	}else{
-		info.activityinfo = req.result1;
-		info.userinfo = null;
-		res.send(JSON.stringify(info));
-	}
-})
-
 module.exports = router;

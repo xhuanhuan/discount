@@ -11,6 +11,10 @@ var register = require('./routes/register');
 var personal = require('./routes/personal');
 var shop = require('./routes/shop');
 var activity = require('./routes/activity');
+var getactivity = require('./routes/getactivity');
+var setActivityStatics = require('./routes/setActivityStatics');
+
+// var mondodb=require('./models/user');
 
 var app = express();
 
@@ -43,7 +47,9 @@ app.use('/register', register);
 app.use('/login', login);
 app.use('/personal', personal);
 app.use('/shop', shop);
-app.use('/getactivity', activity);
+app.use('/getactivity', getactivity);
+app.use('/activity', activity);
+app.use('/setActivityStatics', setActivityStatics);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

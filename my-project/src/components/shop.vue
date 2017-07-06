@@ -93,7 +93,6 @@ import activity from './activity'
 import map from './map'
     export default {
       name: 'shop',
-      // props: ['shopInfo','userInfo'],
       components: {
         'activity-Component': activity,
         'map-Component':map,
