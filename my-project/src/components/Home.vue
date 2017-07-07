@@ -5,13 +5,13 @@
        <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
       <Icon size=20 type="ios-bell"></Icon>
     </div>
-    <div class="block" v-for="(activity,index) in activities" @click="getCurrentActivity(activity)">
+    <div class="block" v-for="(activity,index) in activities" @click="toActivityPage(activity._id)">
       <div class="userInfo-container">
         <div class="userInfo">
         <div class="head-img-container">
         <img :src="activity.coverimg" class="header-img">
         </div>
-        <div class="head-uerInfo"  @click.stop="">
+        <div class="head-uerInfo"  @click.stop="toShopPage(activity.shopid)">
           <p>{{activity.shopname}}</p>
           <p>{{activity.posttime}}</p>
         </div>
@@ -65,10 +65,9 @@ export default {
   created:function(){
     ajax(
     {
-      username:'xiaoboma',
-      age:'27'
+      usernameToken:window.localStorage.discountToken,
     },
-    "http://localhost:3000/getactivity",
+    "http://localhost:3000/home",
     "post",
     (res)=>{
       let resobj = JSON.parse(res);
@@ -83,20 +82,21 @@ export default {
     });
   },
   methods: {
-    getCurrentActivity: function (item) {
-      item.watchs++
-      this.activity=item
-      this.activityShow=true
-      this.shopShow=false
+    toShopPage:function (shopId) {
+      var userId=this.userinfo._id
+      var userName=this.userinfo.username
+      this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
+    },
+    toActivityPage: function (activityId) {
+      var userId=this.userinfo._id
+      var userName=this.userinfo.username
+      this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
     }
   },
   data () {
     return {
       activities:{},
       userinfo:{},
-      activityShow: false,
-      shopShow: false,
-      activity: {}
     }
   }
 }

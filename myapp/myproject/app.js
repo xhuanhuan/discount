@@ -11,7 +11,7 @@ var register = require('./routes/register');
 var personal = require('./routes/personal');
 var shop = require('./routes/shop');
 var activity = require('./routes/activity');
-var getactivity = require('./routes/getactivity');
+var home = require('./routes/home');
 var setActivityStatics = require('./routes/setActivityStatics');
 
 // var mondodb=require('./models/user');
@@ -47,7 +47,7 @@ app.use('/register', register);
 app.use('/login', login);
 app.use('/personal', personal);
 app.use('/shop', shop);
-app.use('/getactivity', getactivity);
+app.use('/home', home);
 app.use('/activity', activity);
 app.use('/setActivityStatics', setActivityStatics);
 

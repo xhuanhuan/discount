@@ -1,5 +1,4 @@
 var express = require('express');
-var jwt = require('../models/jwt_auth');
 var router = express.Router();
 var user=require('../models/user');
 var activity=require('../models/activity');

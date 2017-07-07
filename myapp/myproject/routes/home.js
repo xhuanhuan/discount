@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var activity=require('../models/activity');
 var userinfo = require('../models/user');
+var jwt = require('../models/jwt_auth');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -27,13 +28,14 @@ router.post('/',function(req,res,next){
 })
 router.post('/',function(req,res,next){
 	var info = {};
-	if(req.body.username){
-        userinfo.find({username:req.body.username},function(err,docs){
-        	req.result2 = docs[0];
-        	info.activityinfo = req.result1;
-        	info.userinfo = req.result2;
-        	res.send(JSON.stringify(info));
-        })
+	if(req.body.usernameToken){
+		var username=jwt.decode(req.body.usernameToken).iss
+    userinfo.findOne({username:username},function(err,docs){
+    	req.result2 = docs;
+    	info.activityinfo = req.result1;
+    	info.userinfo = req.result2;
+    	res.send(JSON.stringify(info));
+    })
 	}else{
 		info.activityinfo = req.result1;
 		info.userinfo = null;

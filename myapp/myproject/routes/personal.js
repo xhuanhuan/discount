@@ -7,8 +7,6 @@ var activity=require('../models/activity');
 
 var D={};
 var userInfo={};
-// var shopsInfo=[];
-// var activitiesInfo=[];
 router.post('/',function(req, res, next){
   var data=JSON.parse(Object.keys(req.body)[0]);
   console.log(data)
@@ -31,29 +29,34 @@ router.post('/',function(req, res, next){
 });
 router.post('/',function(req, res, next){
   var shopsInfo=[];
-  D.userInfo.shopid.forEach(function(shopid,index){
-    shop.findOne({_id:shopid},function(err,doc){
-      if(err){
-        next(err)
-      }
-      if(doc){
-        let shopinfo={}
-        shopinfo.shopId=doc._id
-        shopinfo.shopName=doc.shopname
-        shopinfo.headImg=doc.headimg
-        shopsInfo.push(shopinfo)
-      }
-      if(index===D.userInfo.shopid.length-1){
-        D.shopsInfo=shopsInfo
-        console.log(D)
-        next()
-      }
+  if(D.userInfo.shopid.length>0){
+    D.userInfo.shopid.forEach(function(shopid,index){
+      shop.findOne({_id:shopid},function(err,doc){
+        if(err){
+          next(err)
+        }
+        if(doc){
+          let shopinfo={}
+          shopinfo.shopId=doc._id
+          shopinfo.shopName=doc.shopname
+          shopinfo.headImg=doc.headimg
+          shopsInfo.push(shopinfo)
+        }
+        if(index===D.userInfo.shopid.length-1){
+          D.shopsInfo=shopsInfo
+          next()
+        }
+      })
     })
-  })
+  }else{
+    D.shopsInfo=[]
+    next()
+  }
 });
 router.post('/',function(req, res, next){
   console.log(3)
   var activitiesInfo=[];
+  if(D.userInfo.activityid.length>0){
   D.userInfo.activityid.forEach(function(activityid,index){
     activity.findOne({_id:activityid},function(err,doc){
       if(err){
@@ -75,7 +78,10 @@ router.post('/',function(req, res, next){
       }
     })
   })
-
+}else{
+  D.activitiesInfo=[]
+  next()
+}
 });
 
 router.post('/',function(req, res, next){
