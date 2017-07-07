@@ -9,10 +9,6 @@
     </transition>
   </div>
   <div v-else>
-    <div class="setandsistem">
-      <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
-      <Icon class="bell" size=20 type="ios-bell"></Icon>
-    </div>
     <transition name="setPart">
     <div class="setPart" v-if="setShow">
       <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
@@ -52,6 +48,12 @@
       </div>
     </div>
     </transition>
+    <transition name='loading-done'>
+    <div >
+    <div class="setandsistem">
+      <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
+      <Icon class="bell" size=20 type="ios-bell"></Icon>
+    </div>
     <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
       <span class="username">{{personal.userInfo.username}}</span>
       <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
@@ -85,6 +87,8 @@
                 v-on:toShop="toShopPage(item.shopId)"></Collects>
       </div>
     </div>
+  </div>
+  </transition>
   </div>
   <footer-Component></footer-Component>
 </div>
@@ -336,7 +340,8 @@ li{
     transform: translateX(-375px);
   }
 }
-
+</style>
+<style>
 .loading{
   position:absolute;
   top:40%;

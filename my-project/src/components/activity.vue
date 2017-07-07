@@ -1,47 +1,62 @@
 <template>
   <div>
-    <div class="activity-header">
-      <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
-      <span class="shopName">{{activityInfo.shopname}}</span>
-    </div>
-    <div class="acti-body">
-      <h3>{{activityInfo.activityname}}</h3>
-      <p>{{activityInfo.activitycontent}}</p>
-
-      <span class="post-time">{{activityInfo.posttime}}</span>
-      <div class="img-container" v-for="url in activityInfo.postimgs">
-        <img class="img" :src="url">
-      </div>
-    </div>
-    <div class="comments-header">全部评论</div>
-    <div class="comments" v-if="Object.keys(activityInfo).length>0">
-      <div class="comments-line" v-for="(comment,index) in activityInfo.statics.comments" v-on:click="answear(comment)">
-        <span class="person">{{ comment.speaker}}</span>
-        <span v-if="comment.accept.length>0">回复</span>
-        <span class="person" v-if="comment.accept.length>0">{{comment.accept}}</span>
-        <span>：{{comment.content}}</span>
-      </div>
-    </div>
-    <div class="activity-footer">
+    <div v-if='loading'>
+      <transition name='loading-done'>
       <div>
-        <Input v-model="commentContent" :placeholder="placeholder">
-          <span slot="append" v-on:click="enterComment">
-            <Tooltip placement="top" content="输入不能为空" :disabled="showNote">
-              <Icon type="chatbubble-working"></Icon>
-            </Tooltip>
-            </span>
-        </Input>
+        <div class='loading'>
+          <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
+          <div class='loading-text'>loading</div>
+        </div>
+        <footer-Component></footer-Component>
       </div>
-      <div class="div2" v-if="Object.keys(activityInfo).length>0">
-      <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
-      <span :class="isLikeTmp?staticactive:''"
-            v-on:click="changeActivityInfo(userId,'likes')">
-             <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
-      <span :class="isCollectedTmp?staticactive:''"
-            v-on:click="changeActivityInfo(userId,'collections')">
-            <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
-      <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
+      </transition>
     </div>
+    <div v-else>
+      <div>
+        <div class="activity-header">
+          <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
+          <span class="shopName">{{activityInfo.shopname}}</span>
+        </div>
+        <div class="acti-body">
+          <h3>{{activityInfo.activityname}}</h3>
+          <p>{{activityInfo.activitycontent}}</p>
+
+          <span class="post-time">{{activityInfo.posttime}}</span>
+          <div class="img-container" v-for="url in activityInfo.postimgs">
+            <img class="img" :src="url">
+          </div>
+        </div>
+        <div class="comments-header">全部评论</div>
+        <div class="comments" v-if="Object.keys(activityInfo).length>0">
+          <div class="comments-line" v-for="(comment,index) in activityInfo.statics.comments" v-on:click="answear(comment)">
+            <span class="person">{{ comment.speaker}}</span>
+            <span v-if="comment.accept.length>0">回复</span>
+            <span class="person" v-if="comment.accept.length>0">{{comment.accept}}</span>
+            <span>：{{comment.content}}</span>
+          </div>
+        </div>
+        <div class="activity-footer">
+          <div>
+            <Input v-model="commentContent" :placeholder="placeholder">
+              <span slot="append" v-on:click="enterComment">
+                <Tooltip placement="top" content="输入不能为空" :disabled="showNote">
+                  <Icon type="chatbubble-working"></Icon>
+                </Tooltip>
+                </span>
+            </Input>
+          </div>
+          <div class="div2" v-if="Object.keys(activityInfo).length>0">
+          <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
+          <span :class="isLikeTmp?staticactive:''"
+                v-on:click="changeActivityInfo(userId,'likes')">
+                 <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
+          <span :class="isCollectedTmp?staticactive:''"
+                v-on:click="changeActivityInfo(userId,'collections')">
+                <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
+          <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -122,11 +137,24 @@
 .staticactive{
   color:orange;
 }
+
+/*.test-done-enter{
+  opacity:0;
+  transition:opacity 1s;
+}
+.test-done-enter-active{
+  opacity:1;
+  transition:opacity 1s;
+}*/
 </style>
 <script>
-import ajax from '../utils/ajax';
+import ajax from '../utils/ajax'
+import footer from './footer'
 export default {
   name: 'activity',
+  components:{
+    'footer-Component':footer
+  },
   methods: {
     changeActivityInfo:function(userId,note){
       clearTimeout(this.timer)
@@ -234,11 +262,15 @@ export default {
       that.isLikeTmp=data.isLike
       that.isCollectedTmp=data.isCollected
       console.log(data)
+      setTimeout(function(){
+        that.loading = false
+      },1000)
     }
     ajax(data,url,'post',handler)
   },
   data () {
     return {
+      loading:true,
       timer:null,
       activityInfo:{},
       isLike:false,
