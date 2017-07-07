@@ -4,7 +4,7 @@
     <transition name='loading-done'>
     <div class='loading'>
       <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
-      <div class='loading-text'>加载中</div>
+      <div class='loading-text'>loading</div>
     </div>
     </transition>
   </div>
