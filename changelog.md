@@ -3,3 +3,6 @@
 2. 修改思维导图中的api部分
 3. 优化personal.vue中ajax数据未获取到而引起的短暂错误,transition实现过渡，有待改进的点:多个transition的重叠使用？
 4.
+
+### 2017.07.07 晓博
+1. 增加活动页面，店铺页面的loading效果

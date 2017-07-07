@@ -1,35 +1,48 @@
 <template>
   <div class="shop-container" v-if="!showMap">
-    <div class="shop-back">
-      <span v-on:click="back">
-        <Icon type="arrow-left-c" size=20></Icon>店铺页面
-      </span>
-    </div>
-    <div class="shop-header" >
-      <div class="leftpart">
-        <img class="head-Img" :src="shopInfo.headimg">
-        <span class="shopname">{{shopInfo.shopname}}</span>
-      </div>
-      <div class="rightpart">
-            <div v-on:click="togglefollowed">
-              <div style="text-align:center;color:orange">
-                <p>{{shopInfo.fans.length}}</p>
-                <p>粉丝数</p>
-              </div>
-              <Button type="ghost" size='small' icon="checkmark"  style="color:#ff9900;border-color:#ff9900;"
-                      v-if="isFans"
-                      @click="isFans=false">已关注</Button>
-              <Button type="info" size='small' icon="plus"
-                      v-else @click="isFans=true">加关注</Button>
-            </div>
+    <div v-if='loading'>
+      <transition name='loading-done'>
+      <div>
+        <div class='loading'>
+          <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
+          <div class='loading-text'>loading</div>
         </div>
+        <footer-Component></footer-Component>
+      </div>
+      </transition>
     </div>
-    <div class="location" v-on:click="showMap=true">
-      <Icon type="location" size=20></Icon> {{shopInfo.location}}
-    </div>
-    <div class="activity-header">活动</div>
-    <div v-for="(item, index) in activities">
-    <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)" v-on:remove="removeCollects(index)"></Collects>
+    <div v-else>
+      <div class="shop-back">
+        <span v-on:click="back">
+          <Icon type="arrow-left-c" size=20></Icon>店铺页面
+        </span>
+      </div>
+      <div class="shop-header" >
+        <div class="leftpart">
+          <img class="head-Img" :src="shopInfo.headimg">
+          <span class="shopname">{{shopInfo.shopname}}</span>
+        </div>
+        <div class="rightpart">
+              <div v-on:click="togglefollowed">
+                <div style="text-align:center;color:orange">
+                  <p>{{shopInfo.fans.length}}</p>
+                  <p>粉丝数</p>
+                </div>
+                <Button type="ghost" size='small' icon="checkmark"  style="color:#ff9900;border-color:#ff9900;"
+                        v-if="isFans"
+                        @click="isFans=false">已关注</Button>
+                <Button type="info" size='small' icon="plus"
+                        v-else @click="isFans=true">加关注</Button>
+              </div>
+          </div>
+      </div>
+      <div class="location" v-on:click="showMap=true">
+        <Icon type="location" size=20></Icon> {{shopInfo.location}}
+      </div>
+      <div class="activity-header">活动</div>
+      <div v-for="(item, index) in activities">
+      <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)" v-on:remove="removeCollects(index)"></Collects>
+      </div>
     </div>
   </div>
   <div v-else><map-Component :addressInfo="shopInfo.location" v-on:hide="showMap=false"></map-Component></div>
@@ -88,12 +101,14 @@
 }
 </style>
 <script>
-import ajax from '../utils/ajax';
+import ajax from '../utils/ajax'
 import activity from './activity'
 import map from './map'
+import footer from './footer'
     export default {
       name: 'shop',
       components: {
+        'footer-Component':footer,
         'activity-Component': activity,
         'map-Component':map,
         'Collects': {
@@ -126,6 +141,7 @@ import map from './map'
       },
       data () {
         return {
+          loading:true,
           shopInfo:{},
           userId:'',
           userName:'',
@@ -153,6 +169,9 @@ import map from './map'
             that.activities=data.activities
             that.isFans=data.isFans
             console.log(data)
+            setTimeout(function(){
+              that.loading = false
+            },1000)
           }else if(data.getShopInfo==='fail'){
             console.log(店铺不存在)
           }else{
