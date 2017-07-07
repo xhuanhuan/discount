@@ -29,10 +29,10 @@
                   <p>粉丝数</p>
                 </div>
                 <Button type="ghost" size='small' icon="checkmark"  style="color:#ff9900;border-color:#ff9900;"
-                        v-if="isFans"
-                        @click="isFans=false">已关注</Button>
+                        v-if="isFansTmp"
+                        @click="changeShopInfo(userId)">已关注</Button>
                 <Button type="info" size='small' icon="plus"
-                        v-else @click="isFans=true">加关注</Button>
+                        v-else @click="changeShopInfo(userId)">加关注</Button>
               </div>
           </div>
       </div>
@@ -141,12 +141,14 @@ import footer from './footer'
       },
       data () {
         return {
+          timer:null,
           loading:true,
           shopInfo:{},
           userId:'',
           userName:'',
           activities:[],
           isFans:false,
+          isFansTmp:false,
           showMap:false,
         }
       },
@@ -168,7 +170,8 @@ import footer from './footer'
             that.shopInfo=data.shopInfo
             that.activities=data.activities
             that.isFans=data.isFans
-            console.log(data)
+            that.isFansTmp=that.isFans
+            console.log(that.isFans)
             setTimeout(function(){
               that.loading = false
             },1000)
@@ -181,6 +184,34 @@ import footer from './footer'
         ajax(data,url,'post',handler)
       },
       methods: {
+        changeShopInfo:function(userId){
+          clearTimeout(this.timer)
+          this.timer=null
+          this.isFansTmp=!this.isFansTmp
+          var url='http://localhost:3000/setShopInfo';
+          var handler=function(res){
+            var data=JSON.parse(res)
+            console.log(data)
+          }
+          var that=this
+          this.timer=setTimeout(function(){
+            var data={
+              isFansChange:false,
+              isFans:false,
+              shopId:that.shopInfo._id,
+              userId:that.userId
+            }
+            if(that.isFans!==that.isFansTmp){
+              data.isFansChange=true
+              that.isFans=that.isFansTmp
+              data.isFans=that.isFans
+            }
+            console.log(data)
+            if(data.isFansChange){
+              ajax(data,url,'post',handler)
+            }
+          },2000)
+        },
         back: function(){
           this.$router.go(-1)
         },

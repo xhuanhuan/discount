@@ -12,8 +12,8 @@ var personal = require('./routes/personal');
 var shop = require('./routes/shop');
 var activity = require('./routes/activity');
 var home = require('./routes/home');
-var setActivityStatics = require('./routes/setActivityStatics');
-
+var setActivityInfo = require('./routes/setActivityInfo');
+var setShopInfo = require('./routes/setShopInfo');
 // var mondodb=require('./models/user');
 
 var app = express();
@@ -49,8 +49,8 @@ app.use('/personal', personal);
 app.use('/shop', shop);
 app.use('/home', home);
 app.use('/activity', activity);
-app.use('/setActivityStatics', setActivityStatics);
-
+app.use('/setActivityInfo', setActivityInfo);
+app.use('/setShopInfo', setShopInfo);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
