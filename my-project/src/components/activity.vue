@@ -11,7 +11,6 @@
       </div>
     </div>
     <div v-else key='2'>
-      <div>
         <div class="activity-header">
           <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
           <span class="shopName">{{activityInfo.shopname}}</span>
@@ -55,7 +54,6 @@
           <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
         </div>
         </div>
-      </div>
     </div>
     </transition>
   </div>
