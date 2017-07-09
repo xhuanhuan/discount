@@ -9,7 +9,6 @@ import signUp from '@/components/signup'
 import Shop from '@/components/shop'
 import Activity from '@/components/activity'
 import map from '@/components/map'
-
 Vue.use(Router)
 
 export default new Router({
