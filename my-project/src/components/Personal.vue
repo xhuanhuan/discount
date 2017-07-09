@@ -355,30 +355,12 @@ li{
   color:rgb(45, 140, 240);
 }
 .loading-icon .ivu-icon-load-c{
-  /*width:50px;
-  height:50px;*/
   animation:rt 1s linear infinite;
 }
-
-/*@keyframes sss{
-　from{transform:rotate(0deg)}
-　to{transform:rotate(360deg)}
-}*/
 @keyframes rt{
 　0%{transform:rotate(0deg)}
   50%{transform:rotate(180deg)}
   100%{transform:rotate(360deg)}
-}
-.loading-done-enter-active{
-  animation:in 1s linear;
-}
-@keyframes in{
-  from{opacity:0}
-  to{opacity:1}
-}
-.loading-done-leave{
-  transition:opacity 1s;
-  opacity:1;
 }
 .loading-done-leave-active{
   transition:opacity 1s;

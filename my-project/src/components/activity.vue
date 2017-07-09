@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="comments-header">全部评论</div>
-        <div class="comments" v-if="Object.keys(activityInfo).length>0">
+        <div class="comments">
           <div class="comments-line" v-for="(comment,index) in activityInfo.statics.comments" v-on:click="answear(comment)">
             <span class="person">{{ comment.speaker}}</span>
             <span v-if="comment.accept.length>0">回复</span>
@@ -43,7 +43,7 @@
                 </span>
             </Input>
           </div>
-          <div class="div2" v-if="Object.keys(activityInfo).length>0">
+          <div class="div2">
           <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
           <span :class="isLikeTmp?staticactive:''"
                 v-on:click="changeActivityInfo(userId,'likes')">
@@ -54,7 +54,6 @@
           <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
         </div>
         </div>
-    </div>
     </transition>
   </div>
 </template>
@@ -135,15 +134,6 @@
 .staticactive{
   color:orange;
 }
-
-/*.test-done-enter{
-  opacity:0;
-  transition:opacity 1s;
-}
-.test-done-enter-active{
-  opacity:1;
-  transition:opacity 1s;
-}*/
 </style>
 <script>
 import ajax from '../utils/ajax'
@@ -182,7 +172,7 @@ export default {
           activityId:that.activityId,
           userId:that.userId
         }
-        var url='http://localhost:3000/setActivityStatics';
+        var url='http://localhost:3000/setActivityInfo';
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)
@@ -226,7 +216,7 @@ export default {
           activityId:this.activityId,
           userId:this.userId
         }
-        var url='http://localhost:3000/setActivityStatics';
+        var url='http://localhost:3000/setActivityInfo';
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)
