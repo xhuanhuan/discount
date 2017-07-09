@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if='loading'>
-      <transition name='loading-done'>
+    <transition name='loading-done'>
+    <div v-if='loading' key='1'>
       <div>
         <div class='loading'>
           <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
@@ -9,9 +9,8 @@
         </div>
         <footer-Component></footer-Component>
       </div>
-      </transition>
     </div>
-    <div v-else>
+    <div v-else key='2'>
       <div>
         <div class="activity-header">
           <span v-on:click="back"><Icon type="arrow-left-c" size=20></Icon></span>
@@ -58,6 +57,7 @@
         </div>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 <style scoped>

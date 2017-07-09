@@ -1,51 +1,63 @@
 <template>
-  <div class="container">
-    <div class="header">
-      <span calss="city">西安 <Icon type="chevron-down"></Icon></span>
-       <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
-      <Icon size=20 type="ios-bell"></Icon>
-    </div>
-    <div class="block" v-for="(activity,index) in activities" @click="toActivityPage(activity._id)">
-      <div class="userInfo-container">
-        <div class="userInfo">
-        <div class="head-img-container">
-        <img :src="activity.coverimg" class="header-img">
-        </div>
-        <div class="head-uerInfo"  @click.stop="toShopPage(activity.shopid)">
-          <p>{{activity.shopname}}</p>
-          <p>{{activity.posttime}}</p>
-        </div>
-        </div>
-        <Button type="ghost" size='small' icon="checkmark" style="float:right;color:#ff9900;border-color:#ff9900;"
-                v-if="userinfo.username?userinfo.shopid.indexOf(activity._id)>-1:0"
-                v-on:click.stop="">已关注</Button>
-        <Button type="ghost" size='small' style="float:right;"
-                v-else @click.stop="">关注</Button>
-      </div>
-       <div class="cover">
-         <img :src="activity.coverimg" class="cover-img">
-         <div class="activity-Info">
-        <p>{{activity.activityname}}</p>
-        <p>{{activity.activitycontent}}</p>
-      </div>
-      </div>
-      <div class="control">
-        <span class="eye"><Icon size=16 type="eye"></Icon>{{activity.statics.watches}}</span>
-        <div>
-          <Button type="ghost" shape="circle" class="collection" icon="android-favorite" style="color:#39f;border-color:#39f;"
-                  v-if="userinfo.username?userinfo.activityid.indexOf(activity._id)>-1:0"
-                  @click.stop="">{{activity.statics.collections}}</Button>
-          <Button type="ghost" shape="circle" class="collection" icon="android-favorite-outline"
-                  v-else @click.stop="">{{activity.statics.collections}}</Button>
-          <Button type="ghost" shape="circle" class="like" icon="thumbsup" style="color:#39f;border-color:#39f;"
-                  v-if="userinfo.username?userinfo.thumbsupid.indexOf(activity._id)>-1:0"
-                  @click.stop="">{{activity.statics.likes}}</Button>
-          <Button type="ghost" shape="circle" class="like" icon="thumbsup"
-                  v-else @click.stop="">{{activity.statics.likes}}</Button>
-          <Button type="ghost" shape="circle" class="comment" icon="chatbox-working">{{activity.statics.comments.length}}</Button>
+  <div>
+    <transition name='loading-done'>
+      <div v-if='loading' key='1'>
+        <div class='loading'>
+          <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
+          <div class='loading-text'>loading</div>
         </div>
       </div>
-    </div>
+      <div v-else key='2'>
+        <div class="container">
+          <div class="header">
+            <span calss="city">西安 <Icon type="chevron-down"></Icon></span>
+             <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
+            <Icon size=20 type="ios-bell"></Icon>
+          </div>
+          <div class="block" v-for="(activity,index) in activities" @click="toActivityPage(activity._id)">
+            <div class="userInfo-container">
+              <div class="userInfo">
+              <div class="head-img-container">
+              <img :src="activity.coverimg" class="header-img">
+              </div>
+              <div class="head-uerInfo"  @click.stop="toShopPage(activity.shopid)">
+                <p>{{activity.shopname}}</p>
+                <p>{{activity.posttime}}</p>
+              </div>
+              </div>
+              <Button type="ghost" size='small' icon="checkmark" style="float:right;color:#ff9900;border-color:#ff9900;"
+                      v-if="userinfo.username?userinfo.shopid.indexOf(activity._id)>-1:0"
+                      v-on:click.stop="">已关注</Button>
+              <Button type="ghost" size='small' style="float:right;"
+                      v-else @click.stop="">关注</Button>
+            </div>
+             <div class="cover">
+               <img :src="activity.coverimg" class="cover-img">
+               <div class="activity-Info">
+              <p>{{activity.activityname}}</p>
+              <p>{{activity.activitycontent}}</p>
+            </div>
+            </div>
+            <div class="control">
+              <span class="eye"><Icon size=16 type="eye"></Icon>{{activity.statics.watches}}</span>
+              <div>
+                <Button type="ghost" shape="circle" class="collection" icon="android-favorite" style="color:#39f;border-color:#39f;"
+                        v-if="userinfo.username?userinfo.activityid.indexOf(activity._id)>-1:0"
+                        @click.stop="">{{activity.statics.collections}}</Button>
+                <Button type="ghost" shape="circle" class="collection" icon="android-favorite-outline"
+                        v-else @click.stop="">{{activity.statics.collections}}</Button>
+                <Button type="ghost" shape="circle" class="like" icon="thumbsup" style="color:#39f;border-color:#39f;"
+                        v-if="userinfo.username?userinfo.thumbsupid.indexOf(activity._id)>-1:0"
+                        @click.stop="">{{activity.statics.likes}}</Button>
+                <Button type="ghost" shape="circle" class="like" icon="thumbsup"
+                        v-else @click.stop="">{{activity.statics.likes}}</Button>
+                <Button type="ghost" shape="circle" class="comment" icon="chatbox-working">{{activity.statics.comments.length}}</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
     <footer-Component></footer-Component>
   </div>
 </template>
@@ -77,6 +89,7 @@ export default {
       }
       console.log(this.userinfo)
       console.log(this.activities)
+      this.loading=false
     }).then(function(){
       console.log(123)
     });
@@ -95,6 +108,7 @@ export default {
   },
   data () {
     return {
+      loading:true,
       activities:{},
       userinfo:{},
     }
