@@ -10,7 +10,9 @@ router.post('/',function(req, res, next){
     if(err){
       next(err);
     }
-    if(doc){  console.log(doc)
+    if(doc){
+      doc.statics.wathes++
+      doc.save()
       req.info = {
         getactivityInfo: 'success',
         activityInfo: doc
