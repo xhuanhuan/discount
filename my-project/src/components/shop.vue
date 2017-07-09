@@ -1,17 +1,14 @@
 <template>
   <div class="shop-container" v-if="!showMap">
-    <div v-if='loading'>
-      <transition name='loading-done'>
-      <div>
+    <transition name='loading-done' >
+    <div v-if='loading' key='1'>
         <div class='loading'>
           <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
           <div class='loading-text'>loading</div>
         </div>
         <footer-Component></footer-Component>
-      </div>
-      </transition>
     </div>
-    <div v-else>
+    <div v-else key='2'>
       <div class="shop-back">
         <span v-on:click="back">
           <Icon type="arrow-left-c" size=20></Icon>店铺页面
@@ -44,6 +41,7 @@
       <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)" v-on:remove="removeCollects(index)"></Collects>
       </div>
     </div>
+    </transition>
   </div>
   <div v-else><map-Component :addressInfo="shopInfo.location" v-on:hide="showMap=false"></map-Component></div>
 </template>
@@ -98,6 +96,9 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e3e8ee;
+}
+.test-done-enter{
+
 }
 </style>
 <script>
@@ -170,11 +171,16 @@ import footer from './footer'
             that.shopInfo=data.shopInfo
             that.activities=data.activities
             that.isFans=data.isFans
+<<<<<<< HEAD
             that.isFansTmp=that.isFans
             console.log(that.isFans)
             setTimeout(function(){
+=======
+            console.log(data)
+            // setTimeout(function(){
+>>>>>>> 58edc85e94b76dde94c83fc953ae457c1220e0fd
               that.loading = false
-            },1000)
+            // },1000)
           }else if(data.getShopInfo==='fail'){
             console.log(店铺不存在)
           }else{

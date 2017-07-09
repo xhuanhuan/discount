@@ -1,14 +1,6 @@
 <template>
 <div>
-  <div v-if='loading'>
-    <transition name='loading-done'>
-    <div class='loading'>
-      <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
-      <div class='loading-text'>loading</div>
-    </div>
-    </transition>
-  </div>
-  <div v-else>
+  <div v-if='!loading'>
     <transition name="setPart">
     <div class="setPart" v-if="setShow">
       <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
@@ -48,48 +40,56 @@
       </div>
     </div>
     </transition>
-    <transition name='loading-done'>
-    <div >
-    <div class="setandsistem">
-      <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
-      <Icon class="bell" size=20 type="ios-bell"></Icon>
+  </div>
+  <transition name='loading-done'>
+  <div v-if='loading' key='1'>
+    <div class='loading'>
+      <div class='loading-icon'><Icon type="load-c" size='50' color='#2d8cf0'></Icon></div>
+      <div class='loading-text'>loading</div>
     </div>
-    <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
-      <span class="username">{{personal.userInfo.username}}</span>
-      <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
-    </div>
-    <div class="user-info">
-    <Menu mode="horizontal" :active-name="sellected" style="display:flex;justify-content: space-around;">
-        <Menu-item name="1">
-          <div v-on:click="sellected = 1">
-            <Icon type="eye"></Icon>
-            我的关注
-          </div>
-        </Menu-item>
-        <div style="width:1px;height:100%;border-left:1px solid rgb(200, 224, 228);"></div>
-        <Menu-item name="2">
-          <div v-on:click="sellected = 2">
-            <Icon type="android-checkmark-circle"></Icon>
-            我的收藏
-          </div>
-        </Menu-item>
-      </Menu>
-    </div>
-    <div class="app-content" v-if="sellected === 1">
-      <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toShopPage(item.shopId)">
-      <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
+  </div>
+  <div v-else>
+    <div key='2'>
+      <div class="setandsistem">
+        <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
+        <Icon class="bell" size=20 type="ios-bell"></Icon>
       </div>
-    </div>
-    <div class="app-content" v-else>
-      <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toActivityPage(item.activityId)">
-      <Collects :activityInfo="item"
-                v-on:remove="removeActivity(index)"
-                v-on:toShop="toShopPage(item.shopId)"></Collects>
+      <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
+        <span class="username">{{personal.userInfo.username}}</span>
+        <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
+      </div>
+      <div class="user-info">
+      <Menu mode="horizontal" :active-name="sellected" style="display:flex;justify-content: space-around;">
+          <Menu-item name="1">
+            <div v-on:click="sellected = 1">
+              <Icon type="eye"></Icon>
+              我的关注
+            </div>
+          </Menu-item>
+          <div style="width:1px;height:100%;border-left:1px solid rgb(200, 224, 228);"></div>
+          <Menu-item name="2">
+            <div v-on:click="sellected = 2">
+              <Icon type="android-checkmark-circle"></Icon>
+              我的收藏
+            </div>
+          </Menu-item>
+        </Menu>
+      </div>
+      <div class="app-content" v-if="sellected === 1">
+        <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toShopPage(item.shopId)">
+        <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
+        </div>
+      </div>
+      <div class="app-content" v-else>
+        <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toActivityPage(item.activityId)">
+        <Collects :activityInfo="item"
+                  v-on:remove="removeActivity(index)"
+                  v-on:toShop="toShopPage(item.shopId)"></Collects>
+        </div>
       </div>
     </div>
   </div>
   </transition>
-  </div>
   <footer-Component></footer-Component>
 </div>
 </template>
@@ -177,9 +177,9 @@ import ajax from '../utils/ajax';
           var data=JSON.parse(res)
           that.personal=data
           console.log(that.personal)
-          setTimeout(function(){
+          // setTimeout(function(){
             that.loading = false
-          },1000)
+          // },1000)
         }
         ajax(data,url,'post',handler)
       },

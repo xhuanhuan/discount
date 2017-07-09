@@ -6,3 +6,4 @@
 1. 添加主页的路由：toShopPage,toActivityPage,修改主页的初始请求发送的数据以及相应后台处理部分
 ### 2017.07.07 晓博
 1. 增加活动页面，店铺页面的loading效果
+2. 修改loading效果，合理使用transition+key，达到渐隐渐出的效果
