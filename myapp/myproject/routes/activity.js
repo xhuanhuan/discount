@@ -11,7 +11,7 @@ router.post('/',function(req, res, next){
       next(err);
     }
     if(doc){
-      doc.statics.wathes++
+      doc.statics.watches=doc.statics.watches+1
       doc.save()
       req.info = {
         getactivityInfo: 'success',

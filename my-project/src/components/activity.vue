@@ -184,7 +184,7 @@ export default {
           activityId:that.activityId,
           userId:that.userId
         }
-        var url='http://localhost:3000/setActivityStatics';
+        var url='http://localhost:3000/setActivityInfo';
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)

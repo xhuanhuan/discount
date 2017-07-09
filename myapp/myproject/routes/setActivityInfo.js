@@ -6,6 +6,7 @@ router.post('/',function(req, res, next){
   var info={};
   res.set('Access-Control-Allow-Origin', '*');
   data=JSON.parse(Object.keys(req.body)[0]);
+    console.log(data)
   activity.findOne({_id:data.activityId},function(err,doc){
     if(err){
       next(err)
