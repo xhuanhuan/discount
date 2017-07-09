@@ -362,6 +362,17 @@ li{
   50%{transform:rotate(180deg)}
   100%{transform:rotate(360deg)}
 }
+.loading-done-enter-active{
+  animation:in 1s linear;
+}
+@keyframes in{
+  from{opacity:0}
+  to{opacity:1}
+}
+.loading-done-leave{
+  transition:opacity 1s;
+  opacity:1;
+}
 .loading-done-leave-active{
   transition:opacity 1s;
   opacity:0;

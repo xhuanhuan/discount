@@ -171,16 +171,9 @@ import footer from './footer'
             that.shopInfo=data.shopInfo
             that.activities=data.activities
             that.isFans=data.isFans
-<<<<<<< HEAD
             that.isFansTmp=that.isFans
             console.log(that.isFans)
-            setTimeout(function(){
-=======
-            console.log(data)
-            // setTimeout(function(){
->>>>>>> 58edc85e94b76dde94c83fc953ae457c1220e0fd
               that.loading = false
-            // },1000)
           }else if(data.getShopInfo==='fail'){
             console.log(店铺不存在)
           }else{
