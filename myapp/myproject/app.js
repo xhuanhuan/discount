@@ -3,7 +3,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser')
 
 var index = require('./routes/index');
 var login = require('./routes/login');
@@ -14,6 +14,7 @@ var activity = require('./routes/activity');
 var home = require('./routes/home');
 var setActivityInfo = require('./routes/setActivityInfo');
 var setShopInfo = require('./routes/setShopInfo');
+var uploadimg = require('./routes/uploadimg');
 // var mondodb=require('./models/user');
 
 var app = express();
@@ -51,6 +52,8 @@ app.use('/home', home);
 app.use('/activity', activity);
 app.use('/setActivityInfo', setActivityInfo);
 app.use('/setShopInfo', setShopInfo);
+app.use('/uploadimg',uploadimg);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

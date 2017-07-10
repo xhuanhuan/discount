@@ -9,6 +9,9 @@ import signUp from '@/components/signup'
 import Shop from '@/components/shop'
 import Activity from '@/components/activity'
 import map from '@/components/map'
+import uploadimg from '@/components/uploadimg'
+import testarray from '@/components/testarray'
+
 Vue.use(Router)
 
 export default new Router({
@@ -56,6 +59,16 @@ export default new Router({
       path: '/map',
       name: 'map',
       component: map
+    },
+    {
+      path: '/uploadimg',
+      name: 'uploadimg',
+      component: uploadimg
+    },
+    {
+      path: '/testarray',
+      name: 'testarray',
+      component: testarray
     }
   ]
 })
