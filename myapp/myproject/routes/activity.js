@@ -33,6 +33,8 @@ router.post('/',function(req, res, next){
   var isCollected=activityInfo.statics.collections.indexOf(userId)>-1?true:false
   req.info.isLike=isLike
   req.info.isCollected=isCollected
+    req.info.activityInfo.statics.likes=req.info.activityInfo.statics.likes.length
+  req.info.activityInfo.statics.collections=req.info.activityInfo.statics.collections.length
   res.send(JSON.stringify(req.info));
 });
 router.post(function(err,req, res, next) {

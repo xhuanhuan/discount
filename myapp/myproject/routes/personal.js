@@ -5,21 +5,19 @@ var user=require('../models/user');
 var shop=require('../models/shop');
 var activity=require('../models/activity');
 
-var D={};
-var userInfo={};
 router.post('/',function(req, res, next){
   var data=JSON.parse(Object.keys(req.body)[0]);
-  console.log(data)
   var username=jwt.decode(data.userNameToken).iss
   user.findOne({username:username},function(err,doc){
     if(err){
       next(err);
     }
     if(doc){
-      D.userInfo=doc
-      D.userInfo.password=''
+      req.userInfo=doc
+      req.userInfo.password=''
       next()
     }else{
+      req.userInfo=null
       let info = {
         getPersonalInfo: 'fail',
       }
@@ -29,8 +27,8 @@ router.post('/',function(req, res, next){
 });
 router.post('/',function(req, res, next){
   var shopsInfo=[];
-  if(D.userInfo.shopid.length>0){
-    D.userInfo.shopid.forEach(function(shopid,index){
+  if(req.userInfo&&req.userInfo.shopid.length>0){
+    req.userInfo.shopid.forEach(function(shopid,index){
       shop.findOne({_id:shopid},function(err,doc){
         if(err){
           next(err)
@@ -42,22 +40,23 @@ router.post('/',function(req, res, next){
           shopinfo.headImg=doc.headimg
           shopsInfo.push(shopinfo)
         }
-        if(index===D.userInfo.shopid.length-1){
-          D.shopsInfo=shopsInfo
+        if(index===req.userInfo.shopid.length-1){
+          req.shopsInfo=shopsInfo
           next()
         }
       })
     })
   }else{
-    D.shopsInfo=[]
+    req.shopsInfo=[]
     next()
   }
 });
 router.post('/',function(req, res, next){
   console.log(3)
   var activitiesInfo=[];
-  if(D.userInfo.activityid.length>0){
-  D.userInfo.activityid.forEach(function(activityid,index){
+  console.log(req.userInfo.activityid)
+  if(req.userInfo&&req.userInfo.activityid.length>0){
+  req.userInfo.activityid.forEach(function(activityid,index){
     activity.findOne({_id:activityid},function(err,doc){
       if(err){
         next(err)
@@ -71,22 +70,30 @@ router.post('/',function(req, res, next){
         activityinfo.activityContent=doc.activitycontent
         activityinfo.coverImg=doc.coverimg
         activitiesInfo.push(activityinfo)
+      }else{
+        console.log('找不到'+index)
       }
-      if(index===D.userInfo.activityid.length-1){
-        D.activitiesInfo=activitiesInfo
+      if(index===req.userInfo.activityid.length-1){
+        req.activitiesInfo=activitiesInfo
         next()
       }
     })
   })
 }else{
-  D.activitiesInfo=[]
+  req.activitiesInfo=[]
   next()
 }
 });
 
 router.post('/',function(req, res, next){
-  D.getPersonalInfo= 'success',
-  res.send(JSON.stringify(D));
+  console.log(4)
+  let info={
+    getPersonalInfo:'success',
+    activitiesInfo:req.activitiesInfo,
+    shopsInfo:req.shopsInfo,
+    userInfo:req.userInfo
+  }
+  res.send(JSON.stringify(info));
 });
 router.post(function(err,req, res, next) {
   let info = {

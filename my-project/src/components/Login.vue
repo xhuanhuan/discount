@@ -72,7 +72,7 @@
                       let data=JSON.parse(res);
                       if(data.login==='success'){
                         console.log("登录成功")
-                        localStorage.discountToken=data.token
+                        window.localStorage.discountToken=data.token
                         that.$router.push({path:'/home'})
                       }else if(data.login==='fail'){
                           console.log("用户不存在，请先注册")

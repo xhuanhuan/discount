@@ -185,12 +185,44 @@ import ajax from '../utils/ajax';
       },
       methods: {
         removeShop: function(index){
-          this.personal.userInfo.shopid.splice(index,1)
-          this.personal.shopsInfo.splice(index,1)
+          var data={
+            isFansChange:true,
+            isFans:false,
+            shopId:this.personal.shopsInfo[index].shopId,
+            userId:this.personal.userInfo._id
+          }
+          var url='http://localhost:3000/setShopInfo';
+          var that=this
+          var handler=function(res){
+            var data=JSON.parse(res)
+            that.personal.userInfo.shopid.splice(index,1)
+            that.personal.shopsInfo.splice(index,1)
+            console.log(data)
+          }
+          ajax(data,url,'post',handler)
         },
         removeActivity:function(index){
-          this.personal.userInfo.activityid.splice(index,1)
-          this.personal.activitiesInfo.splice(index,1)
+          var activity=this.personal.activitiesInfo[index]
+          var data={
+            isLikesChange:false,
+            isCollectionsChange:true,
+            isCommentsChange:false,
+            isLike:false,
+            isCollected:false,
+            activityId:activity.activityId,
+            userId:this.personal.userInfo._id
+          }
+          var url='http://localhost:3000/setActivityInfo';
+          var that=this
+          var handler=function(res){
+            var data=JSON.parse(res)
+            if(data.setactivityInfo==='success'){
+              that.personal.userInfo.activityid.splice(index,1)
+              that.personal.activitiesInfo.splice(index,1)
+            }
+            console.log(data)
+          }
+          ajax(data,url,'post',handler)
         },
         toShopPage: function(shopId){
           var userId=this.personal.userInfo._id
@@ -209,6 +241,7 @@ import ajax from '../utils/ajax';
       },
       data () {
         return {
+          timer:null,
           loading:true,
           personal:{},
           sellected: '2',

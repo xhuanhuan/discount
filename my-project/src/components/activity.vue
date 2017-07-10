@@ -19,7 +19,6 @@
         <div class="acti-body">
           <h3>{{activityInfo.activityname}}</h3>
           <p>{{activityInfo.activitycontent}}</p>
-
           <span class="post-time">{{activityInfo.posttime}}</span>
           <div class="img-container" v-for="url in activityInfo.postimgs">
             <img class="img" :src="url">
@@ -48,10 +47,10 @@
           <span><Icon type="eye"></Icon>{{activityInfo.statics.watches}}</span>
           <span :class="isLikeTmp?staticactive:''"
                 v-on:click="changeActivityInfo(userId,'likes')">
-                 <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes.length}}</span>
+                 <Icon type="thumbsup"></Icon>{{activityInfo.statics.likes}}</span>
           <span :class="isCollectedTmp?staticactive:''"
                 v-on:click="changeActivityInfo(userId,'collections')">
-                <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections.length}}</span>
+                <Icon type="android-favorite"></Icon>{{activityInfo.statics.collections}}</span>
           <span><Icon type="chatbubble-working"></Icon>{{activityInfo.statics.comments.length}}</span>
         </div>
         </div>
@@ -138,14 +137,6 @@
   color:orange;
 }
 
-/*.test-done-enter{
-  opacity:0;
-  transition:opacity 1s;
-}
-.test-done-enter-active{
-  opacity:1;
-  transition:opacity 1s;
-}*/
 </style>
 <script>
 import ajax from '../utils/ajax'
@@ -160,20 +151,23 @@ export default {
       clearTimeout(this.timer)
       if(note==='likes'){
         this.isLikeTmp=!this.isLikeTmp
-        let index=this.activityInfo.statics.likes.indexOf(userId)
-        if(index>-1){
-          this.activityInfo.statics.likes.splice(index,1)
+        if(this.isLikeTmp){
+          this.activityInfo.statics.likes++
         }else{
-          this.activityInfo.statics.likes.push(userId)
+          this.activityInfo.statics.likes--
         }
       }else if(note==='collections'){
         this.isCollectedTmp=!this.isCollectedTmp
-        let index=this.activityInfo.statics.collections.indexOf(userId)
-        if(index>-1){
-          this.activityInfo.statics.collections.splice(index,1)
+        if(this.isCollectedTmp){
+          this.activityInfo.statics.collections++
         }else{
-          this.activityInfo.statics.collections.push(userId)
+          this.activityInfo.statics.collections--
         }
+      }
+      var url='http://localhost:3000/setActivityInfo';
+      var handler=function(res){
+        var data=JSON.parse(res)
+        console.log(data)
       }
       var that=this
       this.timer=setTimeout(function(){
@@ -181,21 +175,20 @@ export default {
           isLikesChange:false,
           isCollectionsChange:false,
           isCommentsChange:false,
+          isLike:false,
+          isCollected:false,
           activityId:that.activityId,
           userId:that.userId
-        }
-        var url='http://localhost:3000/setActivityInfo';
-        var handler=function(res){
-          var data=JSON.parse(res)
-          console.log(data)
         }
         if(that.isLike!==that.isLikeTmp){
           data.isLikesChange=true
           that.isLike=that.isLikeTmp
+          data.isLike=that.isLike
         }
         if(that.isCollected!==that.isCollectedTmp){
           data.isCollectionsChange=true
           that.isCollected=that.isCollectedTmp
+          data.isCollected=that.isCollected
         }
         if(data.isLikesChange||data.isCollectionsChange){
           ajax(data,url,'post',handler)
@@ -228,7 +221,7 @@ export default {
           activityId:this.activityId,
           userId:this.userId
         }
-        var url='http://localhost:3000/setActivityStatics';
+        var url='http://localhost:3000/setActivityInfo';
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)
@@ -256,6 +249,8 @@ export default {
     var url='http://localhost:3000/activity';
     var handler=function(res){
       var data=JSON.parse(res)
+      data.activityInfo.statics.collections=data.activityInfo.statics.collections[0]
+      data.activityInfo.statics.likes=data.activityInfo.statics.likes[0]
       that.activityInfo=data.activityInfo
       that.isLike=data.isLike
       that.isCollected=data.isCollected

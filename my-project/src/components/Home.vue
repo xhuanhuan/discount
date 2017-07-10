@@ -26,10 +26,10 @@
               </div>
               </div>
               <Button type="ghost" size='small' icon="checkmark" style="float:right;color:#ff9900;border-color:#ff9900;"
-                      v-if="userinfo.username?userinfo.shopid.indexOf(activity._id)>-1:0"
-                      v-on:click.stop="">已关注</Button>
-              <Button type="ghost" size='small' style="float:right;"
-                      v-else @click.stop="">关注</Button>
+                      v-if="userinfo.username?activity.isFansTmp:0"
+                      v-on:click.stop="changeShopInfo(userinfo._id,index)">已关注</Button>
+              <Button type="ghost" size='small' style="float:right;" icon="plus"
+                      v-else @click.stop="changeShopInfo(userinfo._id,index)">加关注</Button>
             </div>
              <div class="cover">
                <img :src="activity.coverimg" class="cover-img">
@@ -41,16 +41,16 @@
             <div class="control">
               <span class="eye"><Icon size=16 type="eye"></Icon>{{activity.statics.watches}}</span>
               <div>
-                <Button type="ghost" shape="circle" class="collection" icon="android-favorite" style="color:#39f;border-color:#39f;"
-                        v-if="userinfo.username?userinfo.activityid.indexOf(activity._id)>-1:0"
-                        @click.stop="">{{activity.statics.collections}}</Button>
+                <Button type="ghost" shape="circle" class="collection" icon="android-favorite" style="color:orange;border-color:orange;"
+                        v-if="activity.isCollectedTmp"
+                        @click.stop="setStaticsInfo(index,'collections',false)">{{activity.statics.collections}}</Button>
                 <Button type="ghost" shape="circle" class="collection" icon="android-favorite-outline"
-                        v-else @click.stop="">{{activity.statics.collections}}</Button>
-                <Button type="ghost" shape="circle" class="like" icon="thumbsup" style="color:#39f;border-color:#39f;"
-                        v-if="userinfo.username?userinfo.thumbsupid.indexOf(activity._id)>-1:0"
-                        @click.stop="">{{activity.statics.likes}}</Button>
+                        v-else @click.stop="setStaticsInfo(index,'collections',true)">{{activity.statics.collections}}</Button>
+                <Button type="ghost" shape="circle" class="like" icon="thumbsup" style="color:orange;border-color:orange;"
+                        v-if="activity.isLikeTmp"
+                        @click.stop="setStaticsInfo(index,'likes',false)">{{activity.statics.likes}}</Button>
                 <Button type="ghost" shape="circle" class="like" icon="thumbsup"
-                        v-else @click.stop="">{{activity.statics.likes}}</Button>
+                        v-else @click.stop="setStaticsInfo(index,'likes',true)">{{activity.statics.likes}}</Button>
                 <Button type="ghost" shape="circle" class="comment" icon="chatbox-working">{{activity.statics.comments.length}}</Button>
               </div>
             </div>
@@ -83,7 +83,7 @@ export default {
     "post",
     (res)=>{
       let resobj = JSON.parse(res);
-      this.activities = resobj.activityinfo;
+      this.activities=resobj.activityinfo
       if(resobj.userinfo){
         this.userinfo = resobj.userinfo;
       }
@@ -104,13 +104,92 @@ export default {
       var userId=this.userinfo._id
       var userName=this.userinfo.username
       this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
+    },
+    changeShopInfo:function(userId,index){
+      clearTimeout(this.timer)
+      this.timer=null
+      this.activities[index].isFansTmp=!this.activities[index].isFansTmp
+      var data={
+        isFansChange:false,
+        isFans:this.activities[index].isFansTmp,
+        shopId:this.activities[index].shopid,
+        userId:this.userinfo._id
+      }
+      var url='http://localhost:3000/setShopInfo';
+      var handler=function(res){
+        var data=JSON.parse(res)
+        console.log(data)
+      }
+      var that=this
+      this.timer=setTimeout(function(){
+        if(that.activities[index].isFans!==that.activities[index].isFansTmp){
+          data.isFansChange=true
+          that.activities[index].isFans=that.activities[index].isFansTmp
+          // data.isFans=that.activities[index].isFans
+        }
+        if(data.isFansChange){
+          ajax(data,url,'post',handler)
+        }
+      },2000)
+    },
+    setStaticsInfo:function (index,note,isadd) {
+      clearTimeout(this.timer)
+      this.timer=null
+      if(note==='likes'){
+        this.activities[index].isLikeTmp=!this.activities[index].isLikeTmp
+        if(this.activities[index].isLikeTmp){
+          this.activities[index].statics.likes++
+        }else{
+          this.activities[index].statics.likes--
+        }
+      }else if(note==='collections'){
+        this.activities[index].isCollectedTmp=!this.activities[index].isCollectedTmp
+        if(this.activities[index].isCollectedTmp){
+          this.activities[index].statics.collections++
+        }else{
+          this.activities[index].statics.collections--
+        }
+      }
+      var data={
+        isLikesChange:false,
+        isCollectionsChange:false,
+        isCommentsChange:false,
+        isLike:false,
+        isCollected:false,
+        activityId:this.activities[index]._id,
+        userId:this.userinfo._id
+      }
+      var url='http://localhost:3000/setActivityInfo';
+      var handler=function(res){
+        var data=JSON.parse(res)
+        console.log(data)
+      }
+      var that=this
+      this.timer=setTimeout(function(){
+        if(that.activities[index].isLike!==that.activities[index].isLikeTmp){
+          data.isLikesChange=true
+          that.activities[index].isLike=that.activities[index].isLikeTmp
+          data.isLike=that.activities[index].isLike
+        }
+        if(that.activities[index].isCollected!==that.activities[index].isCollectedTmp){
+          data.isCollectionsChange=true
+          that.activities[index].isCollected=that.activities[index].isCollectedTmp
+          data.isCollected=that.activities[index].isCollected
+        }
+        if(data.isLikesChange||data.isCollectionsChange){
+          ajax(data,url,'post',handler)
+        }
+      },2000)
     }
   },
   data () {
     return {
+      timer:null,
       loading:true,
-      activities:{},
+      activities:[],
       userinfo:{},
+      isLikeTmp:false,
+      isCollectedTmp:false
     }
   }
 }

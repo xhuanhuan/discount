@@ -46,10 +46,11 @@ router.post('/',function(req, res, next){console.log(2)
     })
   })
 });
-router.post('/',function(req, res, next){console.log(3)
+router.post('/',function(req, res, next){
   var isFans=shopInfo.fans.some(function(item){
     return item===data.userId
   })
+  shopInfo.fans=shopInfo.fans.length
   let info = {
     getShopInfo: 'success',
     shopInfo: shopInfo,

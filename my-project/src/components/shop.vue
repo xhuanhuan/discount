@@ -22,7 +22,7 @@
         <div class="rightpart">
               <div v-on:click="togglefollowed">
                 <div style="text-align:center;color:orange">
-                  <p>{{shopInfo.fans.length}}</p>
+                  <p>{{shopInfo.fans}}</p>
                   <p>粉丝数</p>
                 </div>
                 <Button type="ghost" size='small' icon="checkmark"  style="color:#ff9900;border-color:#ff9900;"
@@ -168,12 +168,12 @@ import footer from './footer'
         var handler=function(res){
           var data=JSON.parse(res)
           if(data.getShopInfo==='success'){
+            data.shopInfo.fans=data.shopInfo.fans[0]
             that.shopInfo=data.shopInfo
             that.activities=data.activities
             that.isFans=data.isFans
             that.isFansTmp=that.isFans
-            console.log(that.isFans)
-              that.loading = false
+            that.loading = false
           }else if(data.getShopInfo==='fail'){
             console.log(店铺不存在)
           }else{
@@ -187,6 +187,11 @@ import footer from './footer'
           clearTimeout(this.timer)
           this.timer=null
           this.isFansTmp=!this.isFansTmp
+          if(this.isFansTmp){
+            this.shopInfo.fans++
+          }else{
+            this.shopInfo.fans--
+          }
           var url='http://localhost:3000/setShopInfo';
           var handler=function(res){
             var data=JSON.parse(res)
@@ -205,7 +210,6 @@ import footer from './footer'
               that.isFans=that.isFansTmp
               data.isFans=that.isFans
             }
-            console.log(data)
             if(data.isFansChange){
               ajax(data,url,'post',handler)
             }

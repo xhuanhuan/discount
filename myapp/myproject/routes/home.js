@@ -3,11 +3,12 @@ var router = express.Router();
 var activity=require('../models/activity');
 var userinfo = require('../models/user');
 var jwt = require('../models/jwt_auth');
+var deepcopy=require('../utils/deepcopy');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
 	activity.find({}, function (err, docs) {
-		req.result1 = docs;
+		req.result1 = docs.map((item)=>item.toObject());
 	    next();
 	});
 });
@@ -22,22 +23,53 @@ router.post('/',function(req,res,next){
 })
 router.post('/',function(req,res,next){
 	activity.find({}, function (err, docs) {
-		req.result1 = docs;
-	    next();
+		req.result1 = docs
+	  next();
 	});
 })
 router.post('/',function(req,res,next){
-	var info = {};
 	if(req.body.usernameToken){
 		var username=jwt.decode(req.body.usernameToken).iss
-    userinfo.findOne({username:username},function(err,docs){
-    	req.result2 = docs;
-    	info.activityinfo = req.result1;
-    	info.userinfo = req.result2;
-    	res.send(JSON.stringify(info));
+    userinfo.findOne({username:username},function(err,doc){
+    	req.result2 = doc.toObject();
+					console.log(req.result2)
+			next()
     })
 	}else{
-		info.activityinfo = req.result1;
+		next()
+	}
+})
+router.post('/',function(req,res,next){
+	var info = {};
+	if(req.result2){
+    	info.userinfo = req.result2
+			info.activityinfo = req.result1.map(function(item){
+				let isLike=item.statics.likes.indexOf(req.result2._id)>-1?true:false
+				let isCollected=item.statics.collections.indexOf(req.result2._id)>-1?true:false
+				let likesLen=item.statics.likes.length
+				let collectionsLen=item.statics.collections.length
+				item=item.toObject()
+				item.statics.likes=likesLen
+				item.statics.collections=collectionsLen
+				item.isLike=isLike
+				item.isCollected=isCollected
+				item.isLikeTmp=isLike
+				item.isCollectedTmp=isCollected
+				item.isFans=info.userinfo.shopid.indexOf(item.shopid)>-1?true:false
+				item.isFansTmp=item.isFans
+				return item
+			})
+    	res.send(JSON.stringify(info))
+	}else{
+		info.activityinfo = req.result1.map(function(item){
+			item.isLike=false
+			item.isCollected=false
+			item.isLikeTmp=false
+			item.isCollectedTmp=false
+			item.statics.likes=item.statics.likes.length
+			item.statics.collections=item.statics.collections.length
+			return item
+		});
 		info.userinfo = null;
 		res.send(JSON.stringify(info));
 	}
