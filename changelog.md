@@ -7,3 +7,6 @@
 ### 2017.07.07 晓博
 1. 增加活动页面，店铺页面的loading效果
 2. 修改loading效果，合理使用transition+key，达到渐隐渐出的效果
+
+### 2017.07.10 晓博
+1. 增加图片上传前后端组件，uploadimg.vue和uploadimg.js
