@@ -164,7 +164,7 @@ import footer from './footer'
           shopId:shopId,
           userId:userId
         }
-        var url='http://localhost:3000/shop';
+        var url=this.myconfig.baseurl+'/shop';
         var handler=function(res){
           var data=JSON.parse(res)
           if(data.getShopInfo==='success'){
@@ -192,7 +192,7 @@ import footer from './footer'
           }else{
             this.shopInfo.fans--
           }
-          var url='http://localhost:3000/setShopInfo';
+          var url=this.myconfig.baseurl+'/setShopInfo';
           var handler=function(res){
             var data=JSON.parse(res)
             console.log(data)

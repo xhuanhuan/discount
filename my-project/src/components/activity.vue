@@ -164,7 +164,7 @@ export default {
           this.activityInfo.statics.collections--
         }
       }
-      var url='http://localhost:3000/setActivityInfo';
+      var url='this.myconfig.baseurl+"/setActivityInfo';
       var handler=function(res){
         var data=JSON.parse(res)
         console.log(data)
@@ -221,7 +221,7 @@ export default {
           activityId:this.activityId,
           userId:this.userId
         }
-        var url='http://localhost:3000/setActivityInfo';
+        var url='this.myconfig.baseurl+"/setActivityInfo';
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)
@@ -246,7 +246,7 @@ export default {
       userId:this.userId
     }
     console.log(data)
-    var url='http://localhost:3000/activity';
+    var url=this.myconfig.baseurl+"/activity";
     var handler=function(res){
       var data=JSON.parse(res)
       data.activityInfo.statics.collections=data.activityInfo.statics.collections[0]

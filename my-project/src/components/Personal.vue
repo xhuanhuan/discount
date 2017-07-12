@@ -172,7 +172,7 @@ import ajax from '../utils/ajax';
         let data={
           userNameToken:localStorage.discountToken
         }
-        let url='http://localhost:3000/personal';
+        let url=this.myconfig.baseurl+'/personal';
         let handler=function(res){
           var data=JSON.parse(res)
           that.personal=data
@@ -191,7 +191,7 @@ import ajax from '../utils/ajax';
             shopId:this.personal.shopsInfo[index].shopId,
             userId:this.personal.userInfo._id
           }
-          var url='http://localhost:3000/setShopInfo';
+          var url=this.myconfig.baseurl+'/setShopInfo';
           var that=this
           var handler=function(res){
             var data=JSON.parse(res)
@@ -212,7 +212,7 @@ import ajax from '../utils/ajax';
             activityId:activity.activityId,
             userId:this.personal.userInfo._id
           }
-          var url='http://localhost:3000/setActivityInfo';
+          var url=this.myconfig.baseurl+'/setActivityInfo';
           var that=this
           var handler=function(res){
             var data=JSON.parse(res)

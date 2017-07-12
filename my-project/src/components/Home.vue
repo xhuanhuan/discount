@@ -79,7 +79,7 @@ export default {
     {
       usernameToken:window.localStorage.discountToken,
     },
-    "http://localhost:3000/home",
+    this.myconfig.baseurl+"/home",
     "post",
     (res)=>{
       let resobj = JSON.parse(res);
@@ -96,6 +96,7 @@ export default {
   },
   methods: {
     toShopPage:function (shopId) {
+      console.log(this.myconfig)
       var userId=this.userinfo._id
       var userName=this.userinfo.username
       this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
@@ -115,7 +116,7 @@ export default {
         shopId:this.activities[index].shopid,
         userId:this.userinfo._id
       }
-      var url='http://localhost:3000/setShopInfo';
+      var url=this.myconfig.baseurl+'/setShopInfo';
       var handler=function(res){
         var data=JSON.parse(res)
         console.log(data)
@@ -159,7 +160,7 @@ export default {
         activityId:this.activities[index]._id,
         userId:this.userinfo._id
       }
-      var url='http://localhost:3000/setActivityInfo';
+      var url=this.myconfig.baseurl+'/setActivityInfo';
       var handler=function(res){
         var data=JSON.parse(res)
         console.log(data)

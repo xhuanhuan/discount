@@ -87,7 +87,7 @@
                         username: user,
                         password:p1
                       };
-                      let url='http://localhost:3000/register';
+                      let url=this.myconfig.baseurl+'/register';
                       let handler=function(res){
                         let data=JSON.parse(res);
                         if(data.register==='success'){
