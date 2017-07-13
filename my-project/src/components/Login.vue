@@ -67,7 +67,7 @@
                       username: user,
                       password:p
                     };
-                    let url=this.myconfig.baseurl+'/login';
+                    let url=that.myconfig.baseurl+'/login';
                     let handler=function(res){
                       let data=JSON.parse(res);
                       if(data.login==='success'){

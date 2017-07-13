@@ -34,14 +34,19 @@
             case '#/personal':active='3';break;
           }
           return active
-        },
-        personal:function(){
-          if(window.localStorage.discountToken){
-            return "/personal"
-          }else{
-            return '/login'
-          }
         }
+    },
+    data(){
+      return {
+        personal:''
+      }
+    },
+    beforeMount:function(){
+      if(window.localStorage.discountToken){
+        this.personal = "/personal"
+      }else{
+        this.personal = '/login'
+      }
     }
   }
 </script>

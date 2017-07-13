@@ -207,7 +207,7 @@ export default {
   width: 100%;
   height: 4rem;
   padding: 0 1rem;
-  padding-top: 1rem;
+  padding-top: 0.3rem;
   background-color: rgb(169,200,221);
   color: white;
   position: fixed;

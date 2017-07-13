@@ -87,12 +87,13 @@
                         username: user,
                         password:p1
                       };
-                      let url=this.myconfig.baseurl+'/register';
+                      let url=that.myconfig.baseurl+'/register';
                       let handler=function(res){
                         let data=JSON.parse(res);
                         if(data.register==='success'){
                           console.log("注册成功")
                           that.$router.push({path:'/home'})
+                          window.localStorage.discountToken = data.token
                           // that.$router.go('/home');
                         }else if(data.register==='fail'){
                             console.log("注册失败")

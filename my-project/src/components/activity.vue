@@ -164,7 +164,7 @@ export default {
           this.activityInfo.statics.collections--
         }
       }
-      var url='this.myconfig.baseurl+"/setActivityInfo';
+      var url=this.myconfig.baseurl+"/setActivityInfo";
       var handler=function(res){
         var data=JSON.parse(res)
         console.log(data)
@@ -221,7 +221,7 @@ export default {
           activityId:this.activityId,
           userId:this.userId
         }
-        var url='this.myconfig.baseurl+"/setActivityInfo';
+        var url=this.myconfig.baseurl+"/setActivityInfo";
         var handler=function(res){
           var data=JSON.parse(res)
           console.log(data)
