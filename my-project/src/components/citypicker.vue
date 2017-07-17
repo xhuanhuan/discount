@@ -3,6 +3,7 @@
     <div class="citypicker-header">
       <span v-on:click="back"><Icon type="chevron-left" size=20></Icon></span>
     </div>
+    <div class="alphabet" @click.stop="toLetter"><div v-for="(letter,index) in alphabet">{{letter}}</div></div>
     <div class="citypicker-body">
       <div class="citypicker-body-up">
       <div class="current-location">当前城市：{{currentCity}}</div>
@@ -33,10 +34,14 @@ export default {
   created:function(){
   },
   methods: {
-    back:function(){}
+    back:function(){},
+    toLetter:function(e){
+      console.log(e.target.innerHTML)
+    }
   },
   data () {
     return {
+      alphabet:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
       currentCity:'西安',
       currentLocation:'西安',
       visitedCity:['西安','南京','杭州','成都'],
@@ -57,6 +62,15 @@ export default {
   display:flex;
   align-items: center;
   padding-left: 1rem;
+}
+.alphabet{
+  position:fixed;
+  top:7rem;
+  bottom:1rem;
+  right:5px;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .citypicker-body{
   width:100%;
