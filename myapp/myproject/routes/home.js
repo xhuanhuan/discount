@@ -70,11 +70,15 @@ router.post('/',function(req,res,next){
 			item.isCollected=false
 			item.isLikeTmp=false
 			item.isCollectedTmp=false
-			item.statics.likes=item.statics.likes.length
-			item.statics.collections=item.statics.collections.length
+			let likesLen=item.statics.likes.length
+			let collectionsLen=item.statics.collections.length
+			item=item.toObject()
+			item.statics.likes=likesLen
+			item.statics.collections=collectionsLen
 			return item
 		});
 		info.userinfo = null;
+		console.log(info)
 		res.send(JSON.stringify(info));
 	}
 })

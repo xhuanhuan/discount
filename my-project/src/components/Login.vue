@@ -67,7 +67,7 @@
                       username: user,
                       password:p
                     };
-                    let url='http://localhost:3000/login';
+                    let url=that.myconfig.baseurl+'/login';
                     let handler=function(res){
                       let data=JSON.parse(res);
                       if(data.login==='success'){

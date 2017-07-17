@@ -106,7 +106,7 @@ export default{
             }
             console.log(1)
         };
-        xhr.open("post","http://localhost:3000/uploadimg",true)
+        xhr.open("post",this.myconfig.baseurl+"/uploadimg",true)
         xhr.onreadystatechange = function(){
           if(xhr.readyState == 4){
             console.log(xhr.responseText);

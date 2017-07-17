@@ -4,12 +4,19 @@
     <transition name="setPart">
     <div class="setPart" v-if="setShow">
       <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
+      <input id='headimg' type='file' style='display:none'
+        accept='image/gif,image/jpeg,image/jpg,image/png'
+        @change='imgchanged'>
+      <input id='coverimg' type='file' style='display:none'
+        accept='image/gif,image/jpeg,image/jpg,image/png'
+        @change='imgchanged'
+        >
       <Collapse style="border-left:none;border-right:none;">
         <Panel name="1">
           个人资料
           <ul slot="content">
-            <li><span>头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-            <li><span>背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.coverimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><label for='headimg'><Icon size=20 type="camera"></Icon></label></li>
+            <li><span>背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.coverimg" /><label for='coverimg'><Icon size=20 type="camera"></Icon></label></li>
             <li><span>性别</span>
               <Select style="width:180px" :value="personal.userInfo.personalinfo.sex">
                 <Option value="男" key="1">男</Option><Option value="女" key="2">女</Option>
@@ -23,6 +30,10 @@
                 <Option value="西安" key="3">西安</Option>
               </Select>
             </li>
+            <li><Button
+              long
+              type='success'
+            >保存</Button></li>
           </ul>
         </Panel>
         <Panel name="2">我的店铺
@@ -172,11 +183,11 @@ import ajax from '../utils/ajax';
         let data={
           userNameToken:localStorage.discountToken
         }
-        let url='http://localhost:3000/personal';
+        let url=this.myconfig.baseurl+'/personal';
         let handler=function(res){
           var data=JSON.parse(res)
           that.personal=data
-          console.log(that.personal)
+          console.log("that.personal",that.personal)
           // setTimeout(function(){
             that.loading = false
           // },1000)
@@ -184,6 +195,10 @@ import ajax from '../utils/ajax';
         ajax(data,url,'post',handler)
       },
       methods: {
+        imgchanged:function(files){
+          console.log(files)
+          console.log("imgchanged")
+        },
         removeShop: function(index){
           var data={
             isFansChange:true,
@@ -191,7 +206,7 @@ import ajax from '../utils/ajax';
             shopId:this.personal.shopsInfo[index].shopId,
             userId:this.personal.userInfo._id
           }
-          var url='http://localhost:3000/setShopInfo';
+          var url=this.myconfig.baseurl+'/setShopInfo';
           var that=this
           var handler=function(res){
             var data=JSON.parse(res)
@@ -212,7 +227,7 @@ import ajax from '../utils/ajax';
             activityId:activity.activityId,
             userId:this.personal.userInfo._id
           }
-          var url='http://localhost:3000/setActivityInfo';
+          var url=this.myconfig.baseurl+'/setActivityInfo';
           var that=this
           var handler=function(res){
             var data=JSON.parse(res)
