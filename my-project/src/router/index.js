@@ -10,7 +10,7 @@ import Shop from '@/components/shop'
 import Activity from '@/components/activity'
 import map from '@/components/map'
 import uploadimg from '@/components/uploadimg'
-import testarray from '@/components/testarray'
+import citypicker from '@/components/citypicker'
 
 Vue.use(Router)
 
@@ -66,9 +66,9 @@ export default new Router({
       component: uploadimg
     },
     {
-      path: '/testarray',
-      name: 'testarray',
-      component: testarray
+      path: '/citypicker',
+      name: 'citypicker',
+      component: citypicker
     }
   ]
 })
