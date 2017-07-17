@@ -30,7 +30,9 @@ router.post('/',function(req,res,next){
 router.post('/',function(req,res,next){
 	if(req.body.usernameToken){
 		var username=jwt.decode(req.body.usernameToken).iss
+		console.log(username)
     userinfo.findOne({username:username},function(err,doc){
+    	console.log(doc)
     	req.result2 = doc.toObject();
 					console.log(req.result2)
 			next()
@@ -66,11 +68,15 @@ router.post('/',function(req,res,next){
 			item.isCollected=false
 			item.isLikeTmp=false
 			item.isCollectedTmp=false
-			item.statics.likes=item.statics.likes.length
-			item.statics.collections=item.statics.collections.length
+			let likesLen=item.statics.likes.length
+			let collectionsLen=item.statics.collections.length
+			item=item.toObject()
+			item.statics.likes=likesLen
+			item.statics.collections=collectionsLen
 			return item
 		});
 		info.userinfo = null;
+		console.log(info)
 		res.send(JSON.stringify(info));
 	}
 })

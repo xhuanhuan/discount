@@ -7,25 +7,18 @@
 var app = require('../app');
 var debug = require('debug')('myproject:server');
 var http = require('http');
-var https = require('https');
-var fs = require('fs');
-//set https options
-var options = {
-    key: fs.readFileSync('./2_api.xiaoboma.cn.key'),
-    cert: fs.readFileSync('./1_api.xiaoboma.cn_bundle.crt')
-};
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
  * Create HTTPS server.
  */
 
-var server = https.createServer(options, app);
+var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
