@@ -24,7 +24,12 @@
         </div>
       </div>
     </div>
-      haha
+    <div class="citypicker-body-down">
+      <div v-for="letter in alphabet">
+        <div class="alpha-city-title">{{letter}}</div>
+        <div class="alpha-city-block" v-for="city in visitedCity">{{city}}</div>
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -101,5 +106,15 @@ export default {
   text-align: center;
   border-radius: 5px;
   margin: 0.4rem;
+}
+.alpha-city-title{
+    padding-left: 1rem;
+}
+.alpha-city-block{
+  background-color: white;
+  border-bottom: 1px solid #e9eaec;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  padding-left: 1rem;
 }
 </style>
