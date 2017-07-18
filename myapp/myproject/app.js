@@ -14,6 +14,7 @@ var activity = require('./routes/activity');
 var home = require('./routes/home');
 var setActivityInfo = require('./routes/setActivityInfo');
 var setShopInfo = require('./routes/setShopInfo');
+var setUserInfo = require('./routes/setUserInfo');
 var uploadimg = require('./routes/uploadimg');
 // var mondodb=require('./models/user');
 
@@ -52,6 +53,7 @@ app.use('/home', home);
 app.use('/activity', activity);
 app.use('/setActivityInfo', setActivityInfo);
 app.use('/setShopInfo', setShopInfo);
+app.use('/setUserInfo', setUserInfo);
 app.use('/uploadimg',uploadimg);
 
 // catch 404 and forward to error handler

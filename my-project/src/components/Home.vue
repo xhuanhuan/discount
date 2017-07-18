@@ -10,7 +10,7 @@
       <div v-else key='2'>
         <div class="container">
           <div class="header">
-            <span calss="city">西安 <Icon type="chevron-down"></Icon></span>
+            <span calss="city">{{userinfo.location}} <Icon type="chevron-down"></Icon></span>
              <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
             <Icon size=20 type="ios-bell"></Icon>
           </div>

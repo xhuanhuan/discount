@@ -136,7 +136,6 @@
 .staticactive{
   color:orange;
 }
-
 </style>
 <script>
 import ajax from '../utils/ajax'
