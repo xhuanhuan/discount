@@ -3,33 +3,33 @@
     <div class="citypicker-header">
       <span v-on:click="back"><Icon type="chevron-left" size=20></Icon></span>
     </div>
-    <div class="alphabet" @click.stop="toLetter"><div v-for="(letter,index) in alphabet">{{letter}}</div></div>
-    <div class="citypicker-body">
+    <!-- <div class="alphabet" @click.stop="toLetter"><div v-for="(letter,index) in alphabet">{{letter}}</div></div> -->
+    <div class="citypicker-body" @click.stop="getCity">
       <div class="citypicker-body-up">
       <div class="current-location">当前城市：{{currentCity}}</div>
       <div class="citypicker-block-container">
         <span>当前定位的城市</span>
-        <div class="citypicker-block">{{currentLocation}}</div>
+        <div data-identification="city" class="citypicker-block">{{currentLocation}}</div>
       </div>
       <div class="citypicker-block-container">
         <span>最近访问的城市</span>
         <div class="citypicker-block-s">
-          <div class="citypicker-block" v-for="city in visitedCity">{{city}}</div>
+          <div data-identification="city" class="citypicker-block" v-for="city in visitedCity">{{city}}</div>
         </div>
       </div>
       <div class="citypicker-block-container">
         <span>热门城市</span>
         <div class="citypicker-block-s">
-          <div class="citypicker-block" v-for="city in hotCity">{{city}}</div>
+          <div data-identification="city" class="citypicker-block" v-for="city in hotCity">{{city}}</div>
         </div>
       </div>
     </div>
-    <div class="citypicker-body-down" @click.stop="getCity">
+    <div class="citypicker-body-down">
       <Collapse v-model="province_value">
           <Panel v-for="(province,index) in province_list" :name="province.name">
             {{province.name}}
-            <div slot="content">
-              <div class="alpha-city-block" v-for="city in province.city_list">{{city.name}}</div>
+            <div class="city-content" slot="content">
+              <div data-identification="city" class="alpha-city-block" v-for="city in province.city_list">{{city.name}}</div>
             </div>
           </Panel>
       </Collapse>
@@ -41,14 +41,36 @@
 import ajax from '../utils/ajax'
 export default {
   created:function(){
+    this.currentCity=this.$route.query.currentCity
+    var citysearch = new AMap.CitySearch();
+    var that=this
+    citysearch.getLocalCity(function(status, result) {
+        if (status === 'complete' && result.info === 'OK') {
+            if (result && result.city && result.bounds) {
+                that.currentLocation = result.city;
+            }
+        }
+    });
   },
   methods: {
-    back:function(){},
+    back:function(){
+      this.$router.push({path:'/home'})
+    },
     toLetter:function(e){
       console.log(e.target.innerHTML)
     },
     getCity:function(e){
-      if(e.target.className==='alpha-city-block'){
+      var that=this
+      console.log(e.target.dataset)
+      if(e.target.dataset.identification==='city'){
+        clearTimeout(this.timer)
+        this.timer=null
+        if(this.visitedCity.length>=6){
+          this.visitedCity.shift()
+        }
+        if(this.visitedCity.indexOf(e.target.innerHTML)===-1){
+          this.visitedCity.push(e.target.innerHTML)
+        }
         var data={
           usernameToken:window.localStorage.discountToken,
           location:e.target.innerHTML
@@ -57,16 +79,19 @@ export default {
         var handler=function(res){
           let data=JSON.parse(res);
           console.log(data)
+          that.currentCity=e.target.innerHTML
         }
-        ajax(data,url,'post',handler)
+        this.timer=setTimeout(function(){
+          ajax(data,url,'post',handler)
+        },2000)
       }
     }
   },
   data () {
     return {
+      timer:null,
       province_value:'',
-      alphabet:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
-      currentCity:'西安',
+      currentCity:'',
       currentLocation:'西安',
       visitedCity:['西安','南京','杭州','成都'],
       hotCity:['北京','成都','重庆','广州','杭州','南京','上海','深圳','天津','武汉','西安'],
@@ -1354,15 +1379,6 @@ export default {
   align-items: center;
   padding-left: 1rem;
 }
-.alphabet{
-  position:fixed;
-  top:7rem;
-  bottom:1rem;
-  right:5px;
-  display:flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 .citypicker-body{
   width:100%;
   margin-top:3rem;
@@ -1387,11 +1403,11 @@ export default {
   background-color: white;
   border: 1px solid #e9eaec;
   height:2.5rem;
-  width:28%;
+  width:29%;
   line-height: 2.5rem;
   text-align: center;
   border-radius: 5px;
-  margin: 0.4rem;
+  margin: 2%;
 }
 .alpha-city-title{
     padding-left: 1rem;
@@ -1403,8 +1419,7 @@ export default {
   line-height: 2.5rem;
   padding-left: 1rem;
 }
-
-/*.ivu-collapse-content .ivu-collapse-content-box{
-  padding:0;
-}*/
+.city-content .alpha-city-block:last-child{
+    border-bottom: transparent;
+}
 </style>

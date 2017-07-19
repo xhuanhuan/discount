@@ -10,7 +10,7 @@
       <div v-else key='2'>
         <div class="container">
           <div class="header">
-            <span calss="city">{{userinfo.location}} <Icon type="chevron-down"></Icon></span>
+            <span calss="city" @click="cityPicker">{{userinfo.location}} <Icon type="chevron-down"></Icon></span>
              <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
             <Icon size=20 type="ios-bell"></Icon>
           </div>
@@ -95,6 +95,9 @@ export default {
     });
   },
   methods: {
+    cityPicker:function(){
+      this.$router.push({name:'citypicker',query:{currentCity:this.userinfo.location}})
+    },
     toShopPage:function (shopId) {
       console.log(this.myconfig)
       var userId=this.userinfo._id
