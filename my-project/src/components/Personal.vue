@@ -6,40 +6,65 @@
       <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
       <input id='headimg' type='file' style='display:none'
         accept='image/gif,image/jpeg,image/jpg,image/png'
-        @change='imgchanged'>
+        @change='filechanged'>
       <input id='coverimg' type='file' style='display:none'
         accept='image/gif,image/jpeg,image/jpg,image/png'
-        @change='imgchanged'
+        @change='filechanged'
         >
       <Collapse style="border-left:none;border-right:none;">
         <Panel name="1">
           个人资料
           <ul slot="content">
-            <li><span>头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><label for='headimg'><Icon size=20 type="camera"></Icon></label></li>
-            <li><span>背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.coverimg" /><label for='coverimg'><Icon size=20 type="camera"></Icon></label></li>
+            <li>
+              <span>头像</span>
+              <div style='position:relative'>
+                <img class="head-Img" :src="personalinfo.headimg" />
+                <transition name='img-cover'>
+                  <div class='img-cover' v-show="uploadimg.headimg.loading">
+                  </div>
+                </transition>
+                <span class='img-progress' v-show="uploadimg.headimg.loading" :style="{width:uploadimg.headimg.progress+'%'}"></span>
+              </div>
+              <label for='headimg'><Icon size=20 type="camera"></Icon></label>
+            </li>
+            <li>
+              <span>背景</span>
+              <div style='position:relative'>
+                <img class="head-Img" :src="personalinfo.coverimg" />
+                <transition name='img-cover'>
+                  <div class='img-cover' v-show="uploadimg.coverimg.loading">
+                  </div>
+                </transition>
+                <span class='img-progress' v-show="uploadimg.coverimg.loading" :style="{width:uploadimg.coverimg.progress+'%'}"></span>
+              </div>
+              <label for='coverimg'><Icon size=20 type="camera"></Icon></label>
+            </li>
             <li><span>性别</span>
-              <Select style="width:180px" :value="personal.userInfo.personalinfo.sex">
-                <Option value="男" key="1">男</Option><Option value="女" key="2">女</Option>
+              <Select style="width:180px" v-model="personalinfo.sex">
+                <Option value="male" key="1">男</Option><Option value="female" key="2">女</Option>
               </Select>
             </li>
-            <li><span>生辰</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
+            <li><span>生辰</span> <Date-picker type="date" v-model="personalinfo.birthday" style="width: 180px"></Date-picker></li>
             <li><span>常驻</span>
-              <Select style="width:180px" :value="personal.userInfo.location">
+              <Select style="width:180px" :value="personal.userInfo.location" :placeholder="personal.userInfo.location">
                 <Option value="北京" key="1">北京</Option>
                 <Option value="深圳" key="2">深圳</Option>
                 <Option value="西安" key="3">西安</Option>
               </Select>
             </li>
-            <li><Button
-              long
-              type='success'
-            >保存</Button></li>
           </ul>
         </Panel>
         <Panel name="2">我的店铺
           <ul slot="content">
-            <li><span>店铺头像</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-            <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li>
+              <span>店铺头像</span>
+              <div style='position:relative'>
+                <img class="head-Img" :src="personalinfo.headimg" />
+                <div class='img-cover'></div>
+              </div>
+              <Icon size=20 type="camera"></Icon>
+            </li>
+            <li><span>店铺背景</span><img class="head-Img" :src="personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
             <li><span>店铺名称</span><p>earth music旗舰店</p></li>
             <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
             <li><router-link to="/shop" style="width:100%;display:flex;justify-content:space-between"><span>去店铺首页</span><Icon type="chevron-right"></Icon></router-link></li>
@@ -65,9 +90,9 @@
         <span class="set" v-on:click="setShow = true"><Icon type="gear-b"></Icon>设置</span>
         <Icon class="bell" size=20 type="ios-bell"></Icon>
       </div>
-      <div class="header" :style='{backgroundImage:`url(${personal.userInfo.personalinfo.coverimg})`}'>
+      <div class="header" :style='{backgroundImage:`url(${personalinfo.coverimg})`}'>
         <span class="username">{{personal.userInfo.username}}</span>
-        <img class="head-Img" :src="personal.userInfo.personalinfo.headimg">
+        <img class="head-Img" :src="personalinfo.headimg">
       </div>
       <div class="user-info">
       <Menu mode="horizontal" :active-name="sellected" style="display:flex;justify-content: space-around;">
@@ -187,6 +212,9 @@ import ajax from '../utils/ajax';
         let handler=function(res){
           var data=JSON.parse(res)
           that.personal=data
+          that.personalinfo = data.userInfo.personalinfo
+          that.personalinfo.headimg = that.myconfig.baseurl+that.personalinfo.headimg
+          that.personalinfo.coverimg = that.myconfig.baseurl+that.personalinfo.coverimg
           console.log("that.personal",that.personal)
           // setTimeout(function(){
             that.loading = false
@@ -195,9 +223,79 @@ import ajax from '../utils/ajax';
         ajax(data,url,'post',handler)
       },
       methods: {
-        imgchanged:function(files){
+        filechanged:function(obj){
+          var that = this
+          console.log(obj.target.id)
+          console.log(obj.target.files)
+          var file = obj.target.files[0]
+          var reader = new FileReader();
+          if(/image/.test(file.type)){
+            reader.readAsDataURL(file);
+            reader.onerror = function(){
+              console.log('读取失败，错误码为:'+reader.error.code);
+            }
+            reader.onload = function(event){
+              that.personalinfo[obj.target.id] = reader.result
+            }
+
+            var data,xhr;
+            data = new FormData();
+            data.append('file',file);
+            data.append("token",localStorage.discountToken)
+            data.append("img",obj.target.id)
+            xhr = new XMLHttpRequest();
+            xhr.upload.onprogress = function(evt){
+                if (evt.lengthComputable) {
+                  var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                  that.uploadimg[obj.target.id].progress=percentComplete
+                }
+            };
+            xhr.open("post",that.myconfig.baseurl+"/uploadimg",true)
+            that.uploadimg[obj.target.id].loading = true
+            xhr.onreadystatechange = function(){
+              if(xhr.readyState == 4){
+                console.log(xhr.responseText);
+                var result = JSON.parse(xhr.responseText);
+                console.log(result)
+                if(result.result=='success'){
+                  that.personalinfo[obj.target.id] = that.myconfig.baseurl+result.url
+                }else{
+                  alert("上传失败");
+                }
+                that.uploadimg[obj.target.id].loading = false
+              }
+            }
+            xhr.send(data)
+          }else {
+            reject('err');
+            alert("请选择图片文件！");
+          }
+        },
+        uploadimg:function(){
+          var that = this
+          var files = this.files.map(function(file){
+            return file.fileinfo;
+          })
           console.log(files)
-          console.log("imgchanged")
+          files.forEach(function(file,index){
+            var data,xhr;
+            data = new FormData();
+            data.append('file',file);
+            xhr = new XMLHttpRequest();
+            xhr.upload.onprogress = function(evt){
+                if (evt.lengthComputable) {
+                    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                    that.files[index].progress=percentComplete
+                }
+            };
+            xhr.open("post",that.myconfig.baseurl+"/uploadimg",true)
+            xhr.onreadystatechange = function(){
+              if(xhr.readyState == 4){
+                console.log(xhr.responseText);
+              }
+            }
+            xhr.send(data)
+          })
         },
         removeShop: function(index){
           var data={
@@ -256,6 +354,22 @@ import ajax from '../utils/ajax';
       },
       data () {
         return {
+          uploadimg:{
+            headimg:{
+              progress:0,
+              loading:false
+            },
+            coverimg:{
+              progress:0,
+              loading:false
+            }
+          },
+          personalinfo:{
+            coverimg:"",
+            headimg:"",
+            sex:"",
+            birthday:""
+          },
           timer:null,
           loading:true,
           personal:{},
@@ -327,9 +441,35 @@ li{
   height:4rem;
   border-radius: 50%;
 }
+.img-cover{
+  width:4rem;
+  height:4rem;
+  border-radius: 50%;
+  display:inline-block;
+  background: radial-gradient(grey, white);
+  /*background-color: grey;*/
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  opacity:0.5;
+}
+.img-progress{
+  opacity:0.5;
+  background-color: #f90;
+  width:2rem;
+  height:10px;
+  display:inline-block;
+  border-radius:5px;
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+}
 .username{
   font-size: 1rem;
-  color: rgb(244,169,122);
+  color: rgba(244,169,122,1);
 }
 .user-info{
   width:100%;
@@ -388,6 +528,23 @@ li{
     transform: translateX(-375px);
   }
 }
+.img-cover-enter-active {
+  animation: bounce-in .5s reverse;
+}
+.img-cover-leave-active {
+  animation: bounce-in .5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(1);
+    opacity:0;
+  }
+  100% {
+    transform: scale(2);
+    opacity:0.5;
+  }
+}
+
 </style>
 <style>
 .loading{

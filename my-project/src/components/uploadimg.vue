@@ -106,9 +106,8 @@ export default{
                 var percentComplete = Math.round(evt.loaded * 100 / evt.total);
                 that.files[index].progress=percentComplete
             }
-            console.log(1)
         };
-        xhr.open("post",this.myconfig.baseurl+"/uploadimg",true)
+        xhr.open("post",that.myconfig.baseurl+"/uploadimg",true)
         xhr.onreadystatechange = function(){
           if(xhr.readyState == 4){
             console.log(xhr.responseText);

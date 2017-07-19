@@ -31,10 +31,10 @@ router.post('/', function(req, res, next) {
     personalinfo:{
       birthday : "20170108",
       sex : "male",
-      headimg : "http://file3.u148.net/2014/1/images/1390620015143.jpg",
-      coverimg : "http://img3.imgtn.bdimg.com/it/u=3797592229,3840448992&fm=26&gp=0.jpg",
-      age : "24"
-    }
+      headimg : "http://localhost:3001/default/headimg.gif",
+      coverimg : "http://localhost:3001/default/coverimg.png"
+    },
+    location:"北京"
   });
   userone.save(function(err,data){
     if(err){
