@@ -50,8 +50,7 @@ export default{
   },
   data(){
     return {
-      files:[],
-      upload:"ghost"
+      files:[]
     }
   },
   methods:{
@@ -85,7 +84,6 @@ export default{
             // imgcontainer.innerHTML += '<img style="width:100px;height:100px;" src = "'+reader.result+'">';
           }
         }else {
-          reject('err');
           alert("请选择图片文件！");
         }
       })

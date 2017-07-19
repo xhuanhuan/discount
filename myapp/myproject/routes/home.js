@@ -3,18 +3,17 @@ var router = express.Router();
 var activity=require('../models/activity');
 var userinfo = require('../models/user');
 var jwt = require('../models/jwt_auth');
-var deepcopy=require('../utils/deepcopy');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-	activity.find({}, function (err, docs) {
-		req.result1 = docs.map((item)=>item.toObject());
-	    next();
-	});
-});
-router.get('/',function(req,res,next){
-    res.send(JSON.stringify(req.result1)+JSON.stringify(req.query));
-})
+// router.get('/', function(req, res, next) {
+// 	activity.find({}, function (err, docs) {
+// 		req.result1 = docs.map((item)=>item.toObject());
+// 	    next();
+// 	});
+// });
+// router.get('/',function(req,res,next){
+//     res.send(JSON.stringify(req.result1)+JSON.stringify(req.query));
+// })
 
 //解读x-www-form-urlencoded信息,重新解读req.body
 router.post('/',function(req,res,next){
@@ -28,14 +27,17 @@ router.post('/',function(req,res,next){
 	});
 })
 router.post('/',function(req,res,next){
-	if(req.body.usernameToken){
+	if(req.body.usernameToken&&jwt.decode(req.body.usernameToken)){
 		var username=jwt.decode(req.body.usernameToken).iss
-		console.log(username)
+		console.log(jwt.decode(req.body.usernameToken))
     userinfo.findOne({username:username},function(err,doc){
-    	console.log(doc)
-    	req.result2 = doc.toObject();
-					console.log(req.result2)
-			next()
+			if(doc){
+				req.result2 = doc.toObject();
+				console.log(req.result2)
+				next()
+			}else{
+				req.result2=null
+			}
     })
 	}else{
 		next()
