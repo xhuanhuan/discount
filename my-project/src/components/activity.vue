@@ -248,8 +248,8 @@ export default {
     var url=this.myconfig.baseurl+"/activity";
     var handler=function(res){
       var data=JSON.parse(res)
-      data.activityInfo.statics.collections=data.activityInfo.statics.collections[0]
-      data.activityInfo.statics.likes=data.activityInfo.statics.likes[0]
+      // data.activityInfo.statics.collections=data.activityInfo.statics.collections[0]
+      // data.activityInfo.statics.likes=data.activityInfo.statics.likes[0]
       that.activityInfo=data.activityInfo
       that.isLike=data.isLike
       that.isCollected=data.isCollected

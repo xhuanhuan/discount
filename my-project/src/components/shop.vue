@@ -125,7 +125,6 @@ import footer from './footer'
           <Button type="text" icon="thumbsup" size="small">{{activityInfo.statics.likes.length}}</Button>
           <Button type="text" icon="android-favorite-outline" size="small">{{activityInfo.statics.collections.length}}</Button>
           <Button type="text" icon="chatbox-working" size="small">{{activityInfo.statics.comments.length}}</Button>
-          <Button type="text" icon="close" size="small" v-on:click.stop="remove" style="float:right;color:orange;"></Button>
           </div>
           </div>
           </div>`,

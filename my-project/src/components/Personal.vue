@@ -70,7 +70,7 @@
             <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.myshopInfo.headimg" /><Icon size=20 type="camera"></Icon></li>
             <li><span>店铺名称</span><p>{{personal.userInfo.myshopInfo.shopname}}</p></li>
             <!-- <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li> -->
-            <li @click=""><span>去店铺首页</span><Icon type="chevron-right"></Icon></li>
+            <li @click="toShopPage(personal.userInfo.myshop.shopid)"><span>去店铺首页</span><Icon type="chevron-right"></Icon></li>
           </ul>
         </Panel>
       </Collapse>

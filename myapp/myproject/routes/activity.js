@@ -15,8 +15,9 @@ router.post('/',function(req, res, next){
       doc.save()
       req.info = {
         getactivityInfo: 'success',
-        activityInfo: doc
+        activityInfo: doc.toObject()
       }
+      // req.info.activityInfo.statics=doc.statics.toObject()
     }else{
       req.info = {
         getactivityInfo: 'fail',
@@ -28,13 +29,15 @@ router.post('/',function(req, res, next){
 });
 router.post('/',function(req, res, next){
   var activityInfo=req.info.activityInfo
+  console.log(activityInfo)
   var userId=req.dataGet.userId
   var isLike=activityInfo.statics.likes.indexOf(userId)>-1?true:false
   var isCollected=activityInfo.statics.collections.indexOf(userId)>-1?true:false
   req.info.isLike=isLike
   req.info.isCollected=isCollected
-    req.info.activityInfo.statics.likes=req.info.activityInfo.statics.likes.length
-  req.info.activityInfo.statics.collections=req.info.activityInfo.statics.collections.length
+  req.info.activityInfo.statics.likes=activityInfo.statics.likes.length
+  req.info.activityInfo.statics.collections=activityInfo.statics.collections.length
+  console.log(req.info.activityInfo.statics)
   res.send(JSON.stringify(req.info));
 });
 router.post(function(err,req, res, next) {
