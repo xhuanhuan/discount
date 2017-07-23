@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class="contentContainer">
     <input
       id='uploadimg-id'
       type='file'
@@ -7,7 +7,7 @@
       style='display:none'
       accept='image/gif,image/jpeg,image/jpg,image/png'
       @change='filechanged'>
-    <label for='uploadimg-id'><Icon size=20 type="camera"></Icon></label>
+    <label for='uploadimg-id' style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1"><Icon size=20 type="ios-cloud-upload-outline"></Icon>上传图片</label>
     <div class='filelist'>
       <div class='show-file' v-for='(file,index) in files' :key='index'>
         <div class='show-file-image'><img :src="file.value" width='100px' height='100px'></div>
@@ -24,6 +24,13 @@
 </template>
 
 <style scoped>
+.contentContainer{
+  /*background-color: silver;*/
+  padding:0.5rem;
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .filelist{
   width:100%;
   padding:0 2%;

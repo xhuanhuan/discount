@@ -11,8 +11,13 @@
     <div v-else key='2'>
       <div class="shop-back">
         <span v-on:click="back">
-          <Icon type="arrow-left-c" size=20></Icon>店铺页面
+           <Button type="text" icon="chevron-left" size="large">返回</Button>
         </span>
+        <span>店铺页面</span>
+        <span v-on:click="toPostPage" v-if="shopInfo.masterid.length>0&&shopInfo.masterid===userId">
+          <Button type="text" icon="ios-compose" size="large">发布</Button>
+        </span>
+        <span v-else style="visibility:hidden">占位符</span>
       </div>
       <div class="shop-header" >
         <div class="leftpart">
@@ -20,7 +25,7 @@
           <span class="shopname">{{shopInfo.shopname}}</span>
         </div>
         <div class="rightpart">
-              <div v-on:click="togglefollowed">
+              <div>
                 <div style="text-align:center;color:orange">
                   <p>{{shopInfo.fans}}</p>
                   <p>粉丝数</p>
@@ -49,11 +54,14 @@
 .shop-back{
   width:100%;
   height:3rem;
+  line-height:3rem;
   background-color: rgba(0, 168, 159, 0.6);
-  padding: 0.5rem 1rem;
+  padding:0 5px;
   position: fixed;
   top:0;
-  left:0;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .shop-container{
   font-size: 1rem;
@@ -96,9 +104,6 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e3e8ee;
-}
-.test-done-enter{
-
 }
 </style>
 <script>
@@ -225,8 +230,8 @@ import footer from './footer'
         toActivitiyPage: function (activityId) {
           this.$router.push({name:'activity',query:{id:activityId},params:{userId:this.userId,userName:this.userName}})
         },
-        togglefollowed: function () {
-          this.followed=!this.followed
+        toPostPage: function () {
+            this.$router.push({name:'post',query:{shopid:this.$route.query.id}})
         }
 
       }

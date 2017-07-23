@@ -1,20 +1,16 @@
 <template>
   <div>
-    <div class="setandsistem">
-      <span class="set">设置</span>
-      <Icon class="bell" size=20 type="ios-bell"></Icon>
-    </div>
     <div class="add-content" v-on:click="addContent">
       <Button data-index="1" style="color:white;" class="btn addTitle" type="dashed">标题</Button>
       <Button data-index="2" style="color:white;" class="btn addContent" type="dashed">文本</Button>
       <Button data-index="3" style="color:white;" class="btn addImg" type="dashed"><Icon type="ios-camera-outline" size="24"></Icon></Button>
       <Button data-index="4" style="color:white;" class="btn preview" type="dashed" >预览</Button>
-      <Button data-index="5" style="color:white;" class="btn post" type="dashed" >提交</Button>
+      <Button data-index="5" style="color:white;" class="btn post" type="dashed" @click="post">提交</Button>
     </div>
     <div id="text-content">
-      <div v-for="item in mycomponents">
-        <addtitle v-if="item==='addtitle'"></addtitle>
-        <addtext v-else-if="item==='addtext'"></addtext>
+      <div v-for="(item,index) in mycomponents">
+        <addtitle v-if="item==='addtitle'" :index="index" v-on:getinputvalue="gettitle"></addtitle>
+        <addtext v-else-if="item==='addtext'" :index="index" v-on:getinputvalue="getcontent"></addtext>
         <addimg v-else></addimg>
       </div>
     </div>
@@ -23,22 +19,45 @@
 </template>
 <script>
 import footer from './footer'
+import uploadimg from './uploadimg'
     export default {
       name: 'post',
       components: {
         'footer-Component':footer,
         'addtitle': {
-          template: `<div class="contentContainer"><label class="note">标题</label><Input class="add_input" placeholder="请输入活动标题" ></Input></div>`
+          template: `<div class="contentContainer"><label class="note">标题</label>
+          <Input v-on:input="changeinput" class="add_input" placeholder="请输入活动标题" >
+          </Input></div>`,
+        props:['index'],
+        methods:{
+          changeinput:function(value){
+            this.$emit('getinputvalue',{index:this.index,value:value})
+          }
+        }
         },
         'addtext': {
-          template: `<div class="contentContainer"><label class="note">文本域</label><Input class="add_input" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入活动内容"></Input></div>`
+          template: `<div class="contentContainer"><label class="note">文本域</label>
+          <Input v-on:input="changeinput" class="add_input" type="textarea" placeholder="请输入活动内容">
+          </Input></div>`,
+          props:['index'],
+          methods:{
+            changeinput:function(value){
+              this.$emit('getinputvalue',{index:this.index,value:value})
+            }
+          }
         },
-        'addimg': {
-          template: `<div class="contentContainer"> <Upload multiple action="//jsonplaceholder.typicode.com/posts/">
-          <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button> </Upload></div>`
-        }
+        'addimg': uploadimg
       },
       methods: {
+        post:function(){
+          console.log(this.inputdata)
+        },
+        gettitle:function(obj){
+          this.inputdata[obj.index]='#title#'+obj.value+'$'
+        },
+        getcontent:function(obj){
+          this.inputdata[obj.index]='#content#'+obj.value+'$'
+        },
         addContent: function (e) {
           var target = e.target
           if (target.type !== 'button') {
@@ -49,13 +68,18 @@ import footer from './footer'
           }
           switch (target.dataset.index) {
             case '1' :
-              this.mycomponents.push('addtitle')
+              if(this.mycomponents.length==0){
+                this.mycomponents.push('addtitle')
+                this.inputdata.push("")
+              }
               break
             case '2' :
               this.mycomponents.push('addtext')
+              this.inputdata.push("")
               break
             case '3' :
               this.mycomponents.push('addimg')
+              this.inputdata.push("")
               break
             case '4' :
               console.log(4)
@@ -65,7 +89,8 @@ import footer from './footer'
       } ,
       data () {
         return {
-          mycomponents: []
+          mycomponents: [],
+          inputdata:[]
         }
       }
     }
@@ -110,7 +135,7 @@ import footer from './footer'
 .add-content{
   width: 100%;
   height: 5rem;
-  margin-top: 3rem;
+  /*margin-top: 3rem;*/
   background-color: #657180;
   border: 1px solid #e3e8ee;
   display: flex;

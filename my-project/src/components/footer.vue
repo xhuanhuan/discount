@@ -1,18 +1,19 @@
 <template>
   <div class="footer">
-  <Menu mode="horizontal" :active-name="active" style="background-color: #e3e8ee;display:flex;justify-content: space-between;">
+  <Menu mode="horizontal" :active-name="active" style="background-color: #e3e8ee;display:flex;justify-content: space-around;">
     <router-link to="/home">
       <Menu-item name="1">
         <Icon type="home"></Icon>
         首页
       </Menu-item>
     </router-link>
-    <router-link to="/post">
+    <div class="divider"></div>
+    <!-- <router-link to="/post">
       <Menu-item name="2" v-if="true">
         <Icon type="compose"></Icon>
         发布
       </Menu-item>
-    </router-link>
+    </router-link> -->
     <router-link :to="personal">
       <Menu-item name="3">
           <Icon type="person"></Icon>
@@ -58,5 +59,10 @@
   position: fixed;
   bottom: 0;
   border-top: 1px solid #d7dde4;
+}
+.divider{
+  width:1px;
+  background-color: #bbbec4;
+  margin: 10px 0;
 }
 </style>

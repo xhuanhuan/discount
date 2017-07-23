@@ -12,6 +12,7 @@ import map from '@/components/map'
 import uploadimg from '@/components/uploadimg'
 import citypicker from '@/components/citypicker'
 import openshop from '@/components/OpenShop'
+import uploadimg_iview from '@/components/uploadimg_iview'
 
 Vue.use(Router)
 
@@ -75,6 +76,11 @@ export default new Router({
       path: '/openshop',
       name: 'openshop',
       component: openshop
+    },
+    {
+      path: '/uploadimg_iview',
+      name: 'uploadimg_iview',
+      component: uploadimg_iview
     }
   ]
 })
