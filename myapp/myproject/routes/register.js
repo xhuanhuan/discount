@@ -6,6 +6,7 @@ var user=require('../models/user');
 
 /* GET users listing. */
 router.post('/', function(req, res, next) {
+  res.set('Access-Control-Allow-Origin', '*');
   var data=JSON.parse(Object.keys(req.body)[0]);
   user.find({username:data.username},function(err,doc){
     if(err){

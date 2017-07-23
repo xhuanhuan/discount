@@ -55,19 +55,22 @@
           </ul>
         </Panel>
         <Panel name="2">我的店铺
-          <ul slot="content">
+          <ul v-if="!personal.userInfo.myshop.hasshop" slot="content">
+            <li class="openShop-btn" @click.stop="openshop">申请开店</li>
+          </ul>
+          <ul v-else slot="content">
             <li>
               <span>店铺头像</span>
               <div style='position:relative'>
-                <img class="head-Img" :src="personalinfo.headimg" />
+                <img class="head-Img" :src="personal.userInfo.myshopInfo.coverimg" />
                 <div class='img-cover'></div>
               </div>
               <Icon size=20 type="camera"></Icon>
             </li>
-            <li><span>店铺背景</span><img class="head-Img" :src="personalinfo.headimg" /><Icon size=20 type="camera"></Icon></li>
-            <li><span>店铺名称</span><p>earth music旗舰店</p></li>
-            <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li>
-            <li><router-link to="/shop" style="width:100%;display:flex;justify-content:space-between"><span>去店铺首页</span><Icon type="chevron-right"></Icon></router-link></li>
+            <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.myshopInfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li><span>店铺名称</span><p>{{personal.userInfo.myshopInfo.shopname}}</p></li>
+            <!-- <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li> -->
+            <li @click=""><span>去店铺首页</span><Icon type="chevron-right"></Icon></li>
           </ul>
         </Panel>
       </Collapse>
@@ -223,6 +226,9 @@ import ajax from '../utils/ajax';
         ajax(data,url,'post',handler)
       },
       methods: {
+        openshop:function(){
+          this.$router.push({name:'openshop',query:{userid:this.personal.userInfo._id}})
+        },
         filechanged:function(obj){
           var that = this
           console.log(obj.target.id)
@@ -397,6 +403,12 @@ li{
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e3e8ee;
+}
+li:last-child{
+  border-bottom: transparent;
+}
+.openShop-btn{
+  color: rgb(92, 173, 255);
 }
 .set-header{
   padding: 1rem;

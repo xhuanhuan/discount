@@ -25,12 +25,12 @@
                 <Icon type="ios-locked-outline" slot="prepend"></Icon>
             </Input>
         </Form-item>
-        <Form-item prop="location">
+        <!-- <Form-item prop="location">
            <Checkbox v-model="single">我是商家</Checkbox>
            <Input v-if="single" v-model="formInline.location" placeholder="详细地址">
                <Icon type="location" slot="prepend"></Icon>
            </Input>
-        </Form-item>
+        </Form-item> -->
         <Form-item>
             <Button type="primary" @click="handleSignIn('formInline')">注册</Button>
         </Form-item>

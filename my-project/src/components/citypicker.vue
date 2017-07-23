@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="citypicker-header">
-      <span v-on:click="back"><Icon type="chevron-left" size=20></Icon></span>
+      <span v-on:click.stop="back"><Icon type="chevron-left" size=20></Icon></span>
     </div>
     <!-- <div class="alphabet" @click.stop="toLetter"><div v-for="(letter,index) in alphabet">{{letter}}</div></div> -->
     <div class="citypicker-body" @click.stop="getCity">
@@ -11,12 +11,12 @@
         <span>当前定位的城市</span>
         <div data-identification="city" class="citypicker-block">{{currentLocation}}</div>
       </div>
-      <div class="citypicker-block-container">
+      <!-- <div class="citypicker-block-container">
         <span>最近访问的城市</span>
         <div class="citypicker-block-s">
           <div data-identification="city" class="citypicker-block" v-for="city in visitedCity">{{city}}</div>
         </div>
-      </div>
+      </div> -->
       <div class="citypicker-block-container">
         <span>热门城市</span>
         <div class="citypicker-block-s">
@@ -54,7 +54,8 @@ export default {
   },
   methods: {
     back:function(){
-      this.$router.push({path:'/home'})
+      // this.$emit('remove')
+      this.$router.push({name:'home',params:{currentCity:this.currentCity}})
     },
     toLetter:function(e){
       console.log(e.target.innerHTML)
@@ -65,12 +66,12 @@ export default {
       if(e.target.dataset.identification==='city'){
         clearTimeout(this.timer)
         this.timer=null
-        if(this.visitedCity.length>=6){
-          this.visitedCity.shift()
-        }
-        if(this.visitedCity.indexOf(e.target.innerHTML)===-1){
-          this.visitedCity.push(e.target.innerHTML)
-        }
+        // if(this.visitedCity.length>=6){
+        //   this.visitedCity.shift()
+        // }
+        // if(this.visitedCity.indexOf(e.target.innerHTML)===-1){
+        //   this.visitedCity.push(e.target.innerHTML)
+        // }
         var data={
           usernameToken:window.localStorage.discountToken,
           location:e.target.innerHTML
@@ -80,10 +81,16 @@ export default {
           let data=JSON.parse(res);
           console.log(data)
           that.currentCity=e.target.innerHTML
+          that.back()
         }
-        this.timer=setTimeout(function(){
-          ajax(data,url,'post',handler)
-        },2000)
+        if(window.localStorage.discountToken.length>0){
+          this.timer=setTimeout(function(){
+            ajax(data,url,'post',handler)
+          },2000)
+        }else{
+          this.currentCity=e.target.innerHTML
+          this.back()
+        }
       }
     }
   },
@@ -93,7 +100,7 @@ export default {
       province_value:'',
       currentCity:'',
       currentLocation:'西安',
-      visitedCity:['西安','南京','杭州','成都'],
+      // visitedCity:['西安','南京','杭州','成都'],
       hotCity:['北京','成都','重庆','广州','杭州','南京','上海','深圳','天津','武汉','西安'],
       province_list: [{
       "name": "北京",
@@ -1407,7 +1414,7 @@ export default {
   line-height: 2.5rem;
   text-align: center;
   border-radius: 5px;
-  margin: 2%;
+  margin: 2.16%;
 }
 .alpha-city-title{
     padding-left: 1rem;

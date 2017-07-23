@@ -13,6 +13,10 @@ var userScheMa = new Schema({
 		age:Number,
 		headimg:String,
 		coverimg:String
+	},
+	myshop:{
+		hasshop:Boolean,
+		shopid:String
 	}
 });	//	定义了一个新的模型，但是此模式还未和users集合有关联
 var user = mongoose.model('users', userScheMa); //	与users集合关联

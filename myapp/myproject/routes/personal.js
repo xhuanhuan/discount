@@ -13,7 +13,7 @@ router.post('/',function(req, res, next){
       next(err);
     }
     if(doc){
-      req.userInfo=doc
+      req.userInfo=doc.toObject()
       req.userInfo.password=''
       next()
     }else{
@@ -84,9 +84,23 @@ router.post('/',function(req, res, next){
   next()
 }
 });
-
 router.post('/',function(req, res, next){
   console.log(4)
+  if(req.userInfo.myshop.hasshop){
+    shop.findOne({_id:req.userInfo.myshop.shopid},function(err,doc){
+      if(err){
+        next(err)
+      }else if(doc){
+        req.userInfo.myshopInfo=doc.toObject()
+      }else{
+        req.userInfo.myshopInfo={}
+      }
+      next()
+    })
+  }
+});
+router.post('/',function(req, res, next){
+  console.log(5)
   let info={
     getPersonalInfo:'success',
     activitiesInfo:req.activitiesInfo,

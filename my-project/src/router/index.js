@@ -11,6 +11,7 @@ import Activity from '@/components/activity'
 import map from '@/components/map'
 import uploadimg from '@/components/uploadimg'
 import citypicker from '@/components/citypicker'
+import openshop from '@/components/OpenShop'
 
 Vue.use(Router)
 
@@ -22,7 +23,7 @@ export default new Router({
     },
     {
       path: '/home',
-      name: 'Home',
+      name: 'home',
       component: Home
     },
     {
@@ -69,6 +70,11 @@ export default new Router({
       path: '/citypicker',
       name: 'citypicker',
       component: citypicker
+    },
+    {
+      path: '/openshop',
+      name: 'openshop',
+      component: openshop
     }
   ]
 })

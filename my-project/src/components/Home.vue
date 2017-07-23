@@ -7,10 +7,13 @@
           <div class='loading-text'>loading</div>
         </div>
       </div>
+      <!-- <div v-else-if="pickcity" key='3'>
+        <city-Picker v-on:remove="pickcity=false"></city-Picker>
+      </div> -->
       <div v-else key='2'>
         <div class="container">
           <div class="header">
-            <span calss="city" @click="cityPicker">{{userinfo.location}} <Icon type="chevron-down"></Icon></span>
+            <span calss="city" @click="cityPicker">{{userinfo.location||currentCity}} <Icon type="chevron-down"></Icon></span>
              <Button style="background-color: white;" class="search-btn" type="ghost" shape="circle" icon="ios-search">搜索</Button>
             <Icon size=20 type="ios-bell"></Icon>
           </div>
@@ -63,16 +66,19 @@
 </template>
 
 <script>
-import activity from './activity'
-import shop from './shop'
+import citypicker from './citypicker'
 import footer from './footer'
 import ajax from '../utils/ajax'
 export default {
   name: 'home',
   components: {
-    'activity-Component': activity,
-    'shop-Component': shop,
-    'footer-Component':footer
+    'footer-Component':footer,
+    'city-Picker':citypicker
+  },
+  computed:{
+    currentCity:function(){
+      return this.$route.params.currentCity
+    }
   },
   created:function(){
     ajax(
@@ -96,7 +102,8 @@ export default {
   },
   methods: {
     cityPicker:function(){
-      this.$router.push({name:'citypicker',query:{currentCity:this.userinfo.location}})
+      // this.pickcity=true
+      this.$router.push({name:'citypicker',query:{currentCity:this.userinfo.location||this.currentCity}})
     },
     toShopPage:function (shopId) {
       console.log(this.myconfig)
@@ -190,6 +197,7 @@ export default {
     return {
       timer:null,
       loading:true,
+      pickcity:false,
       activities:[],
       userinfo:{},
       isLikeTmp:false,
