@@ -37,8 +37,7 @@
              <div class="cover">
                <img :src="activity.coverimg" class="cover-img">
                <div class="activity-Info">
-              <p>{{activity.activityname}}</p>
-              <p>{{activity.activitycontent}}</p>
+              <p>{{activity.activitycontent[0].title}}</p>
             </div>
             </div>
             <div class="control">

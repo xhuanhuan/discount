@@ -122,8 +122,8 @@ import footer from './footer'
           <img :src="activityInfo.coverimg" style="width:6rem;height:6rem;">
           <div style="display:flex;flex-direction:column;justify-content:space-between;width:16rem;height:6rem;">
           <div style="height:5rem;overflow:auto;">
-              <h4>{{activityInfo.activityname}}</h4>
-              <p>{{activityInfo.activitycontent}}</p>
+              <h4>{{activityInfo.activitycontent[0].title}}</h4>
+              <p>{{activityInfo.activitycontent[1].content}}</p>
           </div>
           <div style="display:flex;justify-content:flex-end ">
           <Button type="text" icon="eye" size="small">{{activityInfo.watches}}</Button>

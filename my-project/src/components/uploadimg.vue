@@ -1,24 +1,24 @@
 <template>
   <div class="contentContainer">
     <input
-      id='uploadimg-id'
+      :id='uploadimg_id'
       type='file'
       multiple
       style='display:none'
       accept='image/gif,image/jpeg,image/jpg,image/png'
       @change='filechanged'>
-    <label for='uploadimg-id' style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1"><Icon size=20 type="ios-cloud-upload-outline"></Icon>上传图片</label>
+    <label :for='uploadimg_id' style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1"><Icon size=20 type="ios-cloud-upload-outline"></Icon>上传图片</label>
     <div class='filelist'>
       <div class='show-file' v-for='(file,index) in files' :key='index'>
         <div class='show-file-image'><img :src="file.value" width='100px' height='100px'></div>
         <div class='show-file-progress'>{{file.progress}}</div>
       </div>
-      <Button
+      <!-- <Button
         long
         :type="files.length===0?'ghost':'success'"
         :disabled="files.length===0"
         @click='uploadimg'
-      >上传</Button>
+      >上传</Button> -->
     </div>
   </div>
 </template>
@@ -33,7 +33,7 @@
 }
 .filelist{
   width:100%;
-  padding:0 2%;
+  padding:2% 0;
   display:flex;
   flex-wrap: wrap;
 }
@@ -50,45 +50,46 @@
 </style>
 
 <script>
-let pictures = 0
 export default{
   name:'uploadimg',
+  props:['index'],
+  computed:{
+    uploadimg_id:function(){
+      var s=''
+      s=s+'uploadimg-'+this.index.toString()
+      return s
+    }
+  },
   created:function(){
   },
   data(){
     return {
+      // index:0,
       files:[]
     }
   },
   methods:{
     filechanged:function(obj){
       var that = this
-      console.log(obj.target.files)
+      // console.log(obj.target.files)
       var files = obj.target.files
-      var length = that.files.length;
-      [].map.call(files,function(file){
-        that.files.push({
-          fileinfo:file,
-          value:'',
-          progress:0
-        })
-      })
-      var start = that.files.length-files.length
       var funcs = [].map.call(files,function(file,index){
         var reader = new FileReader();
         if(/image/.test(file.type)){
           reader.readAsDataURL(file);
           reader.onerror = function(){
             console.log('上传失败，错误码为:'+reader.error.code);
-            // progress.innerHTML = '上传失败，错误码为:'+reader.error.code;
           }
           reader.onload = function(event){
-            that.files[start+index].value = reader.result
-            pictures++
-            if(pictures==files.length){
-              console.log(files.length)
+            that.files.push({
+              fileinfo:file,
+              value:reader.result,
+              progress:0
+            })
+            if(index+1==files.length){
+              // console.log(that.files.length)
+              that.$emit('getinputimg',{index:that.index,files:that.files})
             }
-            // imgcontainer.innerHTML += '<img style="width:100px;height:100px;" src = "'+reader.result+'">';
           }
         }else {
           alert("请选择图片文件！");
@@ -100,7 +101,7 @@ export default{
       var files = this.files.map(function(file){
         return file.fileinfo;
       })
-      console.log(files)
+      // console.log(files)
       files.forEach(function(file,index){
         var data,xhr;
         data = new FormData();
@@ -112,15 +113,21 @@ export default{
                 that.files[index].progress=percentComplete
             }
         };
-        xhr.open("post",that.myconfig.baseurl+"/uploadimg",true)
+        xhr.open("post",that.myconfig.baseurl+"/postimg",true)
         xhr.onreadystatechange = function(){
           if(xhr.readyState == 4){
-            console.log(xhr.responseText);
+            if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+              var res=JSON.parse(xhr.responseText)
+              console.log(res);
+              that.files[index]=res.url
+              console.log(index)
+            }else{
+              alert('ajax通信失败 ' + xhr.status)
+            }
           }
         }
         xhr.send(data)
       })
-
     }
   }
 }

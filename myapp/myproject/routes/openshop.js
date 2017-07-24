@@ -57,7 +57,7 @@ router.post('/', function(req, res, next) {
       next(err)
     }else{
       console.log(data)
-      req.newshoId=data._id
+      req.newshopId=data._id
       next()
     }
   })
@@ -66,7 +66,7 @@ router.post('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   user.findOne({_id:req.dataGet.userid},function(err,doc){
     doc.myshop.hasshop=true
-    doc.myshop.shopid=req.newshoId
+    doc.myshop.shopid=req.newshopId
     doc.save()
     var info = {
       openshop:'success',

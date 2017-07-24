@@ -16,7 +16,9 @@ var setActivityInfo = require('./routes/setActivityInfo');
 var setShopInfo = require('./routes/setShopInfo');
 var setUserInfo = require('./routes/setUserInfo');
 var uploadimg = require('./routes/uploadimg');
-var openshop = require('./routes/openshop')
+var openshop = require('./routes/openshop');
+var postimg = require('./routes/postimg')
+var post = require('./routes/post')
 // var mondodb=require('./models/user');
 
 var app = express();
@@ -57,6 +59,8 @@ app.use('/setShopInfo', setShopInfo);
 app.use('/setUserInfo', setUserInfo);
 app.use('/uploadimg',uploadimg);openshop
 app.use('/openshop',openshop);
+app.use('/postimg',postimg);
+app.use('/post',post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

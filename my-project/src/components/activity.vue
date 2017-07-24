@@ -17,11 +17,12 @@
           <span class="shopName">{{activityInfo.shopname}}</span>
         </div>
         <div class="acti-body">
-          <h3>{{activityInfo.activityname}}</h3>
-          <p>{{activityInfo.activitycontent}}</p>
-          <span class="post-time">{{activityInfo.posttime}}</span>
-          <div class="img-container" v-for="url in activityInfo.postimgs">
-            <img class="img" :src="url">
+          <div v-for="item in activityInfo.activitycontent">
+          <h3 v-if="item.title">{{item.title}}<span class="post-time">{{activityInfo.posttime}}</span></h3>
+          <p v-if="item.content">{{item.content}}</p>
+          <div v-if="item instanceof Array" class="img-container" v-for="url in item">
+            <img class="img" :src="myconfig.baseurl+url">
+          </div>
           </div>
         </div>
         <div class="comments-header">全部评论</div>

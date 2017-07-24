@@ -181,8 +181,8 @@ import ajax from '../utils/ajax';
           <img :src="activityInfo.coverImg" style="width:8rem;height:8rem;">
           <div style="width:10rem;height:8rem;overflow:auto">
           <h3 style="color:#5cadff" @click.stop="toShop">{{activityInfo.shopName}}</h3>
-          <h4>{{activityInfo.activityName}}</h4>
-          <p>{{activityInfo.activityContent}}</p>
+          <h4>{{activityInfo.activityContent[0].title}}</h4>
+          <p>{{activityInfo.activityContent[1].content}}</p>
           </div>
             <Button icon="close" shape="circle" size="small" v-on:click.stop="remove"></Button>
           </div>`,
