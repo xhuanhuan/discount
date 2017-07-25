@@ -34,7 +34,7 @@ import uploadimg from './uploadimg'
       components: {
         'footer-Component':footer,
         'addtitle': {
-          template: `<div class="contentContainer"><label class="note">标题</label>
+          template: `<div class="contentContainer"><label class="note">标题   <span :style="empty_note">{{note}}</span></label>
           <div :style="contentContainer_inner">
           <Input :value="text.title||''" v-on:input="changeinput" class="add_input" placeholder="请输入活动标题" ></Input>
           <Button type="text" icon="close-circled" @click="remove"></Button>
@@ -42,10 +42,15 @@ import uploadimg from './uploadimg'
           </div>`,
           data(){
             return {
+              note:'* 输入不能为空',
               contentContainer_inner:{
                 width:'100%',
                 display:'flex',
                 flexDirection:'row'
+              },
+              empty_note:{
+                display:'none',
+                color:'orange'
               }
             }
           },
@@ -169,6 +174,30 @@ import uploadimg from './uploadimg'
             },2000)
             return
           }
+          var flag=0
+          this.inputdata.forEach(function(item,index){
+            console.log(item)
+            if(!(item instanceof Array)){
+              if(!item.title&&!item.content&&!item.coverimg){
+                flag++
+              }else if(item.title&&item.title.length===0){
+                flag++
+              }else if(item.content&&item.content.length===0){
+                flag++
+              }else if(item.coverimg&&item.coverimg.length===0){
+                flag++
+              }
+            }
+          })
+          console.log(this.inputdata,flag)
+          if(flag>0){
+            this.postnote="信息填写不全！不能发布"
+            setTimeout(function(){
+              that.postnote="发布页面"
+            },2000)
+            return
+          }
+
           if(this.post_click){
             this.postnote="正在发布...请耐心等待"
             setTimeout(function(){
