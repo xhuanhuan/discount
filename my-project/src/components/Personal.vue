@@ -121,7 +121,7 @@
       </div>
       <div class="app-content" v-else>
         <div class="block" v-for="(item, index) in personal.activitiesInfo" v-on:click="toActivityPage(item.activityId)">
-        <Collects :activityInfo="item"
+        <Collects :activityInfo="item" :baseurl="myconfig.baseurl"
                   v-on:remove="removeActivity(index)"
                   v-on:toShop="toShopPage(item.shopId)"></Collects>
         </div>
@@ -178,7 +178,8 @@ import ajax from '../utils/ajax';
         },
         'Collects': {
           template: `<div class="collects_container">
-          <img :src="activityInfo.coverImg" style="width:8rem;height:8rem;">
+          <img v-if="activityInfo.coverImg.indexOf('http')>-1" :src="activityInfo.coverImg" style="width:8rem;height:8rem;">
+          <img v-else :src="baseurl+activityInfo.coverImg" style="width:8rem;height:8rem;">
           <div style="width:10rem;height:8rem;overflow:auto">
           <h3 style="color:#5cadff" @click.stop="toShop">{{activityInfo.shopName}}</h3>
           <h4>{{activityInfo.activityContent[0].title}}</h4>
@@ -186,7 +187,7 @@ import ajax from '../utils/ajax';
           </div>
             <Button icon="close" shape="circle" size="small" v-on:click.stop="remove"></Button>
           </div>`,
-          props: ['activityInfo'],
+          props: ['activityInfo','baseurl'],
           methods: {
             toShop: function () {
               this.$emit('toShop')
@@ -447,6 +448,7 @@ li:last-child{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index:1000;
 }
 .head-Img{
   width:4rem;

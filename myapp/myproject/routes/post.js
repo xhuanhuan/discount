@@ -17,7 +17,10 @@ router.post('/', function(req, res, next) {
       req.shop=doc
       req.dataGet.shopname=doc.shopname
       req.dataGet.shopheadimg=doc.shopheadimg
-      req.dataGet.coverimg=doc.coverimg
+      var coveritem=data.activitycontent.filter(function(item){
+        return item.coverimg
+      })
+      req.dataGet.coverimg=coveritem.length>0?coveritem[0].coverimg:doc.coverimg
       next()
     }else{
       let info={

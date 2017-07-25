@@ -174,7 +174,12 @@ import footer from './footer'
           if(data.getShopInfo==='success'){
             data.shopInfo.fans=data.shopInfo.fans[0]
             that.shopInfo=data.shopInfo
-            that.activities=data.activities
+            that.activities=data.activities.map(function(item){
+              if(item.coverimg.indexOf('http')===-1){
+                item.coverimg=that.myconfig.baseurl+item.coverimg
+              }
+              return item
+            })
             that.isFans=data.isFans
             that.isFansTmp=that.isFans
             that.loading = false

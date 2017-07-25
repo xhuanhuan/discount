@@ -7,9 +7,14 @@
       style='display:none'
       accept='image/gif,image/jpeg,image/jpg,image/png'
       @change='filechanged'>
-    <label :for='uploadimg_id' style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1"><Icon size=20 type="ios-cloud-upload-outline"></Icon>上传图片</label>
+      <div class="contentContainer_inner">
+        <label :for='uploadimg_id'
+        style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1">
+              <Icon size=20 type="ios-cloud-upload-outline"></Icon>上传图片</label>
+        <Button type="text" icon="close-circled" @click="remove"></Button>
+      </div>
     <div class='filelist'>
-      <div class='show-file' v-for='(file,index) in files' :key='index'>
+      <div class='show-file' v-for='(file,index) in files'>
         <div class='show-file-image'><img :src="file.value" width='100px' height='100px'></div>
         <div class='show-file-progress'>{{file.progress}}</div>
       </div>
@@ -25,11 +30,15 @@
 
 <style scoped>
 .contentContainer{
-  /*background-color: silver;*/
   padding:0.5rem;
   display:flex;
   flex-direction: column;
   align-items: flex-start;
+}
+.contentContainer_inner{
+  width:100%;
+  display:flex;
+  flex-direction:row;
 }
 .filelist{
   width:100%;
@@ -52,7 +61,7 @@
 <script>
 export default{
   name:'uploadimg',
-  props:['index'],
+  props:['index','FL'],
   computed:{
     uploadimg_id:function(){
       var s=''
@@ -61,14 +70,17 @@ export default{
     }
   },
   created:function(){
+    this.files=this.FL
   },
   data(){
     return {
-      // index:0,
       files:[]
     }
   },
   methods:{
+    remove:function(){
+      this.$emit('removeComponent',this.index)
+    },
     filechanged:function(obj){
       var that = this
       // console.log(obj.target.files)

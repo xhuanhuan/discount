@@ -21,6 +21,7 @@
             <div class="userInfo-container">
               <div class="userInfo">
               <div class="head-img-container">
+              <!-- <img v-if="activity.coverimg.indexOf('http')==-1" :src="myconfig.baseurl+activity.coverimg" class="header-img"> -->
               <img :src="activity.coverimg" class="header-img">
               </div>
               <div class="head-uerInfo"  @click.stop="toShopPage(activity.shopid)">
@@ -80,6 +81,7 @@ export default {
     }
   },
   created:function(){
+    var that=this
     ajax(
     {
       usernameToken:window.localStorage.discountToken,
@@ -88,7 +90,12 @@ export default {
     "post",
     (res)=>{
       let resobj = JSON.parse(res);
-      this.activities=resobj.activityinfo
+      this.activities=resobj.activityinfo.map(function(item){
+        if(item.coverimg.indexOf('http')===-1){
+          item.coverimg=that.myconfig.baseurl+item.coverimg
+        }
+        return item
+      })
       if(resobj.userinfo){
         this.userinfo = resobj.userinfo;
       }
