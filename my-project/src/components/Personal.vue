@@ -4,13 +4,20 @@
     <transition name="setPart">
     <div class="setPart" v-if="setShow">
       <div class="set-header"><Button type="text" icon="chevron-left" v-on:click="setShow = false">返回</Button></div>
-      <input id='headimg' type='file' style='display:none'
+      <input id='user_headimg' type='file' style='display:none'
         accept='image/gif,image/jpeg,image/jpg,image/png'
         @change='filechanged'>
-      <input id='coverimg' type='file' style='display:none'
+      <input id='user_coverimg' type='file' style='display:none'
         accept='image/gif,image/jpeg,image/jpg,image/png'
         @change='filechanged'
         >
+        <input id='shop_headimg' type='file' style='display:none'
+          accept='image/gif,image/jpeg,image/jpg,image/png'
+          @change='filechanged'>
+        <input id='shop_coverimg' type='file' style='display:none'
+          accept='image/gif,image/jpeg,image/jpg,image/png'
+          @change='filechanged'
+          >
       <Collapse style="border-left:none;border-right:none;">
         <Panel name="1">
           个人资料
@@ -20,24 +27,24 @@
               <div style='position:relative'>
                 <img class="head-Img" :src="personalinfo.headimg" />
                 <transition name='img-cover'>
-                  <div class='img-cover' v-show="uploadimg.headimg.loading">
+                  <div class='img-cover' v-show="uploadimg.user_headimg.loading">
                   </div>
                 </transition>
-                <span class='img-progress' v-show="uploadimg.headimg.loading" :style="{width:uploadimg.headimg.progress+'%'}"></span>
+                <span class='img-progress' v-show="uploadimg.user_headimg.loading" :style="{width:uploadimg.user_headimg.progress+'%'}"></span>
               </div>
-              <label for='headimg'><Icon size=20 type="camera"></Icon></label>
+              <label for='user_headimg'><Icon size=20 type="camera"></Icon></label>
             </li>
             <li>
               <span>背景</span>
               <div style='position:relative'>
                 <img class="head-Img" :src="personalinfo.coverimg" />
                 <transition name='img-cover'>
-                  <div class='img-cover' v-show="uploadimg.coverimg.loading">
+                  <div class='img-cover' v-show="uploadimg.user_coverimg.loading">
                   </div>
                 </transition>
-                <span class='img-progress' v-show="uploadimg.coverimg.loading" :style="{width:uploadimg.coverimg.progress+'%'}"></span>
+                <span class='img-progress' v-show="uploadimg.user_coverimg.loading" :style="{width:uploadimg.user_coverimg.progress+'%'}"></span>
               </div>
-              <label for='coverimg'><Icon size=20 type="camera"></Icon></label>
+              <label for='user_coverimg'><Icon size=20 type="camera"></Icon></label>
             </li>
             <li><span>性别</span>
               <Select style="width:180px" v-model="personalinfo.sex">
@@ -62,12 +69,27 @@
             <li>
               <span>店铺头像</span>
               <div style='position:relative'>
-                <img class="head-Img" :src="personal.userInfo.myshopInfo.coverimg" />
-                <div class='img-cover'></div>
+                <img class="head-Img" :src="personal.userInfo.myshopInfo.headimg.indexOf('http')===-1?myconfig.baseurl+personal.userInfo.myshopInfo.headimg:personal.userInfo.myshopInfo.headimg" />
+                <transition name='img-cover'>
+                  <div class='img-cover' v-show="uploadimg.shop_headimg.loading">
+                  </div>
+                </transition>
+                <span class='img-progress' v-show="uploadimg.shop_headimg.loading" :style="{width:uploadimg.shop_headimg.progress+'%'}"></span>
               </div>
-              <Icon size=20 type="camera"></Icon>
+              <label for='shop_headimg'><Icon size=20 type="camera"></Icon></label>
             </li>
-            <li><span>店铺背景</span><img class="head-Img" :src="personal.userInfo.myshopInfo.headimg" /><Icon size=20 type="camera"></Icon></li>
+            <li>
+              <span>店铺背景</span>
+              <div style='position:relative'>
+                <img class="head-Img" :src="personal.userInfo.myshopInfo.coverimg.indexOf('http')===-1?myconfig.baseurl+personal.userInfo.myshopInfo.coverimg:personal.userInfo.myshopInfo.coverimg" />
+                <transition name='img-cover'>
+                  <div class='img-cover' v-show="uploadimg.shop_coverimg.loading">
+                  </div>
+                </transition>
+                <span class='img-progress' v-show="uploadimg.shop_coverimg.loading" :style="{width:uploadimg.shop_coverimg.progress+'%'}"></span>
+              </div>
+              <label for='shop_coverimg'><Icon size=20 type="camera"></Icon></label>
+            </li>
             <li><span>店铺名称</span><p>{{personal.userInfo.myshopInfo.shopname}}</p></li>
             <!-- <li><span>创建时间</span> <Date-picker type="date" :value="personal.userInfo.personalinfo.birthday" placeholder="选择日期" style="width: 180px"></Date-picker></li> -->
             <li @click="toShopPage(personal.userInfo.myshop.shopid)"><span>去店铺首页</span><Icon type="chevron-right"></Icon></li>
@@ -178,8 +200,7 @@ import ajax from '../utils/ajax';
         },
         'Collects': {
           template: `<div class="collects_container">
-          <img v-if="activityInfo.coverImg.indexOf('http')>-1" :src="activityInfo.coverImg" style="width:8rem;height:8rem;">
-          <img v-else :src="baseurl+activityInfo.coverImg" style="width:8rem;height:8rem;">
+          <img :src="baseurl+activityInfo.activityContent[2].coverimg" style="width:8rem;height:8rem;">
           <div style="width:10rem;height:8rem;overflow:auto">
           <h3 style="color:#5cadff" @click.stop="toShop">{{activityInfo.shopName}}</h3>
           <h4>{{activityInfo.activityContent[0].title}}</h4>
@@ -217,8 +238,8 @@ import ajax from '../utils/ajax';
           var data=JSON.parse(res)
           that.personal=data
           that.personalinfo = data.userInfo.personalinfo
-          that.personalinfo.headimg = that.myconfig.baseurl+that.personalinfo.headimg
-          that.personalinfo.coverimg = that.myconfig.baseurl+that.personalinfo.coverimg
+          that.personalinfo.headimg = that.personalinfo.headimg.indexOf("http")===-1? that.myconfig.baseurl+that.personalinfo.headimg:that.personalinfo.headimg
+          that.personalinfo.coverimg =that.personalinfo.coverimg.indexOf("http")===-1? that.myconfig.baseurl+that.personalinfo.coverimg:that.personalinfo.coverimg
           console.log("that.personal",that.personal)
           // setTimeout(function(){
             that.loading = false
@@ -250,6 +271,7 @@ import ajax from '../utils/ajax';
             data.append('file',file);
             data.append("token",localStorage.discountToken)
             data.append("img",obj.target.id)
+            data.append("shopid",that.personal.userInfo.myshop.shopid)
             xhr = new XMLHttpRequest();
             xhr.upload.onprogress = function(evt){
                 if (evt.lengthComputable) {
@@ -265,7 +287,11 @@ import ajax from '../utils/ajax';
                 var result = JSON.parse(xhr.responseText);
                 console.log(result)
                 if(result.result=='success'){
-                  that.personalinfo[obj.target.id] = that.myconfig.baseurl+result.url
+                  if(obj.target.id.indexOf('user')>-1){
+                    that.personalinfo[obj.target.id.substring(obj.target.id.indexOf('_')+1,obj.target.id.length)] = that.myconfig.baseurl+result.url
+                  }else{
+                    that.personal.userInfo.myshopInfo[obj.target.id.substring(obj.target.id.indexOf('_')+1,obj.target.id.length)]=that.myconfig.baseurl+result.url
+                  }
                 }else{
                   alert("上传失败");
                 }
@@ -362,11 +388,19 @@ import ajax from '../utils/ajax';
       data () {
         return {
           uploadimg:{
-            headimg:{
+            user_headimg:{
               progress:0,
               loading:false
             },
-            coverimg:{
+            user_coverimg:{
+              progress:0,
+              loading:false
+            },
+            shop_headimg:{
+              progress:0,
+              loading:false
+            },
+            shop_coverimg:{
               progress:0,
               loading:false
             }

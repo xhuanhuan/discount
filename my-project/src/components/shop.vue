@@ -19,9 +19,9 @@
         </span>
         <span v-else style="visibility:hidden">占位符</span>
       </div>
-      <div class="shop-header" >
+      <div class="shop-header" :style="{backgroundImage:`url(${shopInfo.coverimg.indexOf('http')===-1?myconfig.baseurl+shopInfo.coverimg:shopInfo.coverimg})`}">
         <div class="leftpart">
-          <img class="head-Img" :src="shopInfo.headimg">
+          <img class="head-Img" :src="shopInfo.headimg.indexOf('http')===-1?myconfig.baseurl+shopInfo.headimg:shopInfo.headimg">
           <span class="shopname">{{shopInfo.shopname}}</span>
         </div>
         <div class="rightpart">
@@ -43,7 +43,7 @@
       </div>
       <div class="activity-header">活动</div>
       <div v-for="(item, index) in activities">
-      <Collects :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)" v-on:remove="removeCollects(index)"></Collects>
+      <Collects :baseurl="myconfig.baseurl" :activityInfo="item" :activities="activities" v-on:toActivitiyPage="toActivitiyPage(item._id)"></Collects>
       </div>
     </div>
     </transition>
@@ -70,8 +70,7 @@
   width:100%;
   height:9rem;
   padding: 0 1rem;
-  background-image: url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1495467447278&di=cb96ffa1d9ce351015f48a9dc7accdab&imgtype=0&src=http%3A%2F%2Fp2.gexing.com%2FG1%2FM00%2F94%2F3E%2FrBACJ1Wf1AHR_z0GAAAY0B5Z488547.jpg);
-  background-size: contain;
+  background-size: cover;
   display:flex;
   justify-content: space-between;
   align-items:flex-end;
@@ -119,7 +118,7 @@ import footer from './footer'
         'map-Component':map,
         'Collects': {
           template: `<div class="collects_container" v-on:click="toActivitiyPage">
-          <img :src="activityInfo.coverimg" style="width:6rem;height:6rem;">
+          <img :src="baseurl+activityInfo.activitycontent[2].coverimg" style="width:6rem;height:6rem;">
           <div style="display:flex;flex-direction:column;justify-content:space-between;width:16rem;height:6rem;">
           <div style="height:5rem;overflow:auto;">
               <h4>{{activityInfo.activitycontent[0].title}}</h4>
@@ -133,11 +132,8 @@ import footer from './footer'
           </div>
           </div>
           </div>`,
-          props: ['activityInfo', 'activities'],
+          props: ['activityInfo', 'activities','baseurl'],
           methods: {
-            remove: function () {
-              this.$emit('remove')
-            },
             toActivitiyPage: function () {
               this.$emit('toActivitiyPage')
             }
@@ -174,12 +170,7 @@ import footer from './footer'
           if(data.getShopInfo==='success'){
             data.shopInfo.fans=data.shopInfo.fans[0]
             that.shopInfo=data.shopInfo
-            that.activities=data.activities.map(function(item){
-              if(item.coverimg.indexOf('http')===-1){
-                item.coverimg=that.myconfig.baseurl+item.coverimg
-              }
-              return item
-            })
+            that.activities=data.activities
             that.isFans=data.isFans
             that.isFansTmp=that.isFans
             that.loading = false

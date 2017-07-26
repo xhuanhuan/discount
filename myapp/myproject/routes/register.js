@@ -29,11 +29,18 @@ router.post('/', function(req, res, next) {
   var userone=new user({
     username: data.username,
     password: sha1(data.password),
+    activityid:[],
+    shopid:[],
+    thumbsupid:[],
+    myshop : {
+       hasshop : false,
+       shopid : ""
+   },
     personalinfo:{
       birthday : "20170108",
       sex : "male",
-      headimg : "http://localhost:3001/default/headimg.gif",
-      coverimg : "http://localhost:3001/default/coverimg.png"
+      headimg : "http://up.qqjia.com/z/25/tu32741_12.jpg",
+      coverimg : "http://img005.hc360.cn/m8/M02/6C/77/wKhQplUUu5qEa2QEAAAAAH710KU373.jpg"
     },
     location:"北京"
   });

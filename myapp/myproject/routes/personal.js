@@ -68,7 +68,6 @@ router.post('/',function(req, res, next){
         activityinfo.shopName=doc.shopname
         activityinfo.activityName=doc.activityname
         activityinfo.activityContent=doc.activitycontent
-        activityinfo.coverImg=doc.coverimg
         activitiesInfo.push(activityinfo)
       }else{
         console.log('找不到'+index)
@@ -97,6 +96,8 @@ router.post('/',function(req, res, next){
       }
       next()
     })
+  }else{
+      next()
   }
 });
 router.post('/',function(req, res, next){
@@ -107,6 +108,7 @@ router.post('/',function(req, res, next){
     shopsInfo:req.shopsInfo,
     userInfo:req.userInfo
   }
+  console.log(info)
   res.send(JSON.stringify(info));
 });
 router.post(function(err,req, res, next) {

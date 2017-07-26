@@ -16,11 +16,7 @@ router.post('/', function(req, res, next) {
     }else if(doc){
       req.shop=doc
       req.dataGet.shopname=doc.shopname
-      req.dataGet.shopheadimg=doc.shopheadimg
-      var coveritem=data.activitycontent.filter(function(item){
-        return item.coverimg
-      })
-      req.dataGet.coverimg=coveritem.length>0?coveritem[0].coverimg:doc.coverimg
+      req.dataGet.shopheadimg=doc.headimg
       next()
     }else{
       let info={
@@ -37,7 +33,6 @@ router.post('/', function(req, res, next) {
     shopname:req.dataGet.shopname,
     shopheadimg:req.dataGet.shopheadimg,
     activitycontent: req.dataGet.activitycontent,
-    coverimg: req.dataGet.coverimg,
     posttime:'2017/12/21 12:21:23',
     statics:{
       watches:0,

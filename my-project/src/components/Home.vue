@@ -21,8 +21,8 @@
             <div class="userInfo-container">
               <div class="userInfo">
               <div class="head-img-container">
-              <!-- <img v-if="activity.coverimg.indexOf('http')==-1" :src="myconfig.baseurl+activity.coverimg" class="header-img"> -->
-              <img :src="activity.coverimg" class="header-img">
+              <!-- <img v-if="activity.shopheadimg.indexOf('http')==-1" :src="myconfig.baseurl+activity.shopheadimg" class="header-img"> -->
+              <img :src="activity.shopheadimg.indexOf('http')==-1?myconfig.baseurl+activity.shopheadimg:activity.shopheadimg" class="header-img">
               </div>
               <div class="head-uerInfo"  @click.stop="toShopPage(activity.shopid)">
                 <p>{{activity.shopname}}</p>
@@ -36,9 +36,10 @@
                       v-else @click.stop="changeShopInfo(userinfo._id,index)">加关注</Button>
             </div>
              <div class="cover">
-               <img :src="activity.coverimg" class="cover-img">
+               <img :src="myconfig.baseurl+activity.activitycontent[2].coverimg" class="cover-img">
                <div class="activity-Info">
               <p>{{activity.activitycontent[0].title}}</p>
+              <p>{{activity.activitycontent[1].content}}</p>
             </div>
             </div>
             <div class="control">
@@ -90,12 +91,7 @@ export default {
     "post",
     (res)=>{
       let resobj = JSON.parse(res);
-      this.activities=resobj.activityinfo.map(function(item){
-        if(item.coverimg.indexOf('http')===-1){
-          item.coverimg=that.myconfig.baseurl+item.coverimg
-        }
-        return item
-      })
+      this.activities=resobj.activityinfo
       if(resobj.userinfo){
         this.userinfo = resobj.userinfo;
       }

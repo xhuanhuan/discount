@@ -45,9 +45,10 @@ router.post('/', function(req, res, next) {
 //new shop
 router.post('/', function(req, res, next) {
   var shopone=new shop({
+    "masterid":req.dataGet.userid,
     "shopname" : req.dataGet.shopname,
-    "headimg" : "http://img5.imgtn.bdimg.com/it/u=3691544771,740678494&fm=23&gp=0.jpg",
-    "coverimg" : "http://img0.imgtn.bdimg.com/it/u=3696229962,3913167766&fm=23&gp=0.jpg",
+    "headimg" : "http://up.qqjia.com/z/25/tu32741_12.jpg",
+    "coverimg" : "http://photos.tuchong.com/33792/f/855658.jpg",
     "location" : req.dataGet.location,
     "activityid" : [],
     "fans" : [],

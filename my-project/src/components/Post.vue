@@ -8,18 +8,27 @@
       <span style="visibility:hidden">占位符</span>
     </div>
     <div class="add-content" v-on:click="addContent">
-      <Button data-index="1" style="color:white;" class="btn addTitle" type="dashed">标题</Button>
-      <Button data-index="2" style="color:white;" class="btn addContent" type="dashed">文本</Button>
-      <Button data-index="3" style="color:white;" class="btn addImg" type="dashed"><Icon type="ios-camera-outline" size="24"></Icon></Button>
-      <Button data-index="4" style="color:white;" class="btn cover" type="dashed">封面</Button>
-      <Button data-index="5" style="color:white;" class="btn post" type="dashed" @click="post">提交</Button>
+      <Button data-index="1" style="color:white;" class="post_btn" type="dashed">小标题</Button>
+      <Button data-index="2" style="color:white;" class="post_btn" type="dashed">文本</Button>
+      <Button data-index="3" style="color:white;" class="post_btn" type="dashed"><Icon type="ios-camera-outline" size="24"></Icon></Button>
+      <!-- <Button data-index="4" style="color:white;" class="post_btn" type="dashed">封面</Button> -->
+      <Button data-index="5" style="color:white;" class="post_btn" type="dashed" @click="post">提交</Button>
     </div>
     <div id="text-content">
+      <div class="contentContainer"><label class="note">活动标题 <span class="warn">{{title_note}}</span></label>
+        <Input v-model="title" class="add_input" placeholder="请输入活动标题" ></Input>
+      </div>
+      <div class="contentContainer"><label class="note">活动摘要<span class="warn">{{summary_note}}</span></label>
+        <Input v-model="summary" class="add_input" placeholder="请输入活动摘要" ></Input>
+      </div>
+      <div style="display:flex;align-items:center">
+        <addcoverimg :FL="coverimg" v-on:getinputimg="getcoverimg"></addcoverimg>
+        <span class="warn">{{coverimg_note}}</span></div>
       <div v-for="(item,index) in mycomponents">
         <addtitle v-if="item==='addtitle'" :text="inputdata[index]" :index="index" v-on:getinputvalue="gettitle" v-on:removeComponent="removeComponent"></addtitle>
         <addtext v-else-if="item==='addtext'" :text="inputdata[index]" :index="index" v-on:getinputvalue="getcontent" v-on:removeComponent="removeComponent"></addtext>
-        <addimg v-else-if="item==='addimg'" :FL="inputdata[index]" :index="index" v-on:getinputimg="getimg" v-on:removeComponent="removeComponent"></addimg>
-        <addcoverimg v-else :FL="inputdata[index]" :index="index" v-on:getinputimg="getcoverimg" v-on:removeComponent="removeComponent"></addcoverimg>
+        <addimg v-else :FL="inputdata[index]" :index="index" v-on:getinputimg="getimg" v-on:removeComponent="removeComponent"></addimg>
+        <!-- <addcoverimg v-else :FL="inputdata[index]" :index="index" v-on:getinputimg="getcoverimg" v-on:removeComponent="removeComponent"></addcoverimg> -->
       </div>
     </div>
     <footer-Component></footer-Component>
@@ -34,7 +43,7 @@ import uploadimg from './uploadimg'
       components: {
         'footer-Component':footer,
         'addtitle': {
-          template: `<div class="contentContainer"><label class="note">标题   <span :style="empty_note">{{note}}</span></label>
+          template: `<div class="contentContainer"><label class="note">标题</label>
           <div :style="contentContainer_inner">
           <Input :value="text.title||''" v-on:input="changeinput" class="add_input" placeholder="请输入活动标题" ></Input>
           <Button type="text" icon="close-circled" @click="remove"></Button>
@@ -42,7 +51,6 @@ import uploadimg from './uploadimg'
           </div>`,
           data(){
             return {
-              note:'* 输入不能为空',
               contentContainer_inner:{
                 width:'100%',
                 display:'flex',
@@ -96,11 +104,8 @@ import uploadimg from './uploadimg'
               <input id='uploadimg_cover' type='file' style='display:none'
                      accept='image/gif,image/jpeg,image/jpg,image/png'
                      @change='filechanged'>
-              <div :style="contentContainer_inner">
                 <label for='uploadimg_cover' style="display:block;width:8rem;height:3rem;line-height:3rem;text-align:center;border-radius:3px;border:1px solid #dddee1">
-                      <Icon size=20 type="ios-cloud-upload-outline"></Icon>上传封面</label>
-                <Button type="text" icon="close-circled" @click="remove"></Button>
-              </div>
+                <Icon size=20 type="ios-cloud-upload-outline"></Icon>上传封面</label>
               <div :style='filelist'>
                 <div class='show-file' v-if="Object.keys(file).length>0">
                   <div class='show-file-image'><img :src="file.value" width='100px' height='100px'></div>
@@ -108,9 +113,9 @@ import uploadimg from './uploadimg'
                 </div>
               </div>
             </div>`,
-            props:['index','FL'],
+            props:['FL'],
             created:function(){
-              this.file=this.FL.coverimg?this.FL.coverimg[0]:{}
+              this.file=this.FL.length===1?this.FL[0]:{}
             },
             data () {
               return{
@@ -119,16 +124,14 @@ import uploadimg from './uploadimg'
                   paddingTop:'5px'
                 },
                 contentContainer_inner:{
-                width:'100%',
-                display:'flex',
-                flexDirection:'row'
-              }
+                  width:'100%',
+                  display:'flex',
+                  alignItems:'center'
+              //    flexDirection:'row'
+                }
               }
             },
             methods:{
-              remove:function(){
-                this.$emit('removeComponent',this.index)
-              },
               filechanged:function(obj){
                 var that = this
                 var file = obj.target.files[0]
@@ -146,7 +149,7 @@ import uploadimg from './uploadimg'
                       value:reader.result,
                       progress:0
                     }
-                  that.$emit('getinputimg',{index:that.index,file:that.file})
+                  that.$emit('getinputimg',{file:that.file})
                   }
                 }else {
                   alert("请选择图片文件！");
@@ -157,6 +160,65 @@ import uploadimg from './uploadimg'
         }
       },
       methods: {
+        checkinput:function(){
+          var that=this
+          if(this.post_click){
+            this.postnote="正在发布...请耐心等待"
+            setTimeout(function(){
+              that.postnote="发布中..."
+            },2000)
+            return true
+          }else if(this.title.length===0){
+            this.postnote="信息不全！不能发布"
+            this.title_note="*请填写标题！"
+            setTimeout(function(){
+              that.postnote="发布页面"
+              that.title_note=''
+            },2000)
+            return true
+          }else if(this.summary.length===0){
+            this.postnote="信息不全！不能发布"
+            this.summary_note="*请填写摘要！"
+            setTimeout(function(){
+              that.postnote="发布页面"
+              that.summary_note=''
+            },2000)
+            return true
+          }else if(this.coverimg.length===0){
+            this.postnote="信息不全！不能发布"
+            this.coverimg_note="*请填写摘要！"
+            setTimeout(function(){
+              that.postnote="发布页面"
+              that.coverimg_note=''
+            },2000)
+            return true
+          }else{
+            var flag=0
+            this.inputdata.forEach(function(item,index){
+              if(!(item instanceof Array)){
+                if(!item.title&&!item.content){
+                  flag++
+                }else if(item.title&&item.title.length===0){
+                  flag++
+                }else if(item.content&&item.content.length===0){
+                  flag++
+                }
+              }
+            })
+            if(flag>0){
+              this.postnote="信息填写不全！不能发布"
+              setTimeout(function(){
+                that.postnote="发布页面"
+              },2000)
+              return true
+            }else{
+              this.postdata=[{title:this.title},{content:this.summary},{coverimg:this.coverimg}].concat(this.inputdata)
+              this.postnote="发布中..."
+              this.post_click=true
+              return false
+            }
+          }
+        },
         removeComponent:function(index){
           this.mycomponents.splice(index,1)
           this.inputdata.splice(index,1)
@@ -167,52 +229,11 @@ import uploadimg from './uploadimg'
         },
         post:function(){
           var that=this
-          if(this.inputdata.length===0){
-            this.postnote="内容为空！不能发布"
-            setTimeout(function(){
-              that.postnote="发布页面"
-            },2000)
+          if(this.checkinput()){
             return
-          }
-          var flag=0
-          this.inputdata.forEach(function(item,index){
-            console.log(item)
-            if(!(item instanceof Array)){
-              if(!item.title&&!item.content&&!item.coverimg){
-                flag++
-              }else if(item.title&&item.title.length===0){
-                flag++
-              }else if(item.content&&item.content.length===0){
-                flag++
-              }else if(item.coverimg&&item.coverimg.length===0){
-                flag++
-              }
-            }
-          })
-          console.log(this.inputdata,flag)
-          if(flag>0){
-            this.postnote="信息填写不全！不能发布"
-            setTimeout(function(){
-              that.postnote="发布页面"
-            },2000)
-            return
-          }
-
-          if(this.post_click){
-            this.postnote="正在发布...请耐心等待"
-            setTimeout(function(){
-              that.postnote="发布页面"
-            },2000)
-            return
-          }else{
-            this.postnote="发布中..."
-            this.post_click=true
           }
           var promiseArr=[]
-          this.inputdata.forEach(function(item,key){
-            if(!(item instanceof Array)){
-                that.postdata[key]=item
-            }
+          this.postdata.forEach(function(item,key){
             if(item instanceof Array||item.coverimg){
               let promiseOne=new Promise(function(resolve,reject){
                 if(item instanceof Array){
@@ -293,7 +314,7 @@ import uploadimg from './uploadimg'
                 },2000)
               }
             }
-            ajax(data,url,'post',handler)
+            // ajax(data,url,'post',handler)
           })
         },
         gettitle:function(obj){
@@ -306,7 +327,7 @@ import uploadimg from './uploadimg'
           this.inputdata[obj.index]=obj.files
         },
         getcoverimg:function(obj){
-          this.inputdata[obj.index]={coverimg: [obj.file]}
+          this.coverimg=[obj.file]
         },
         addContent: function (e) {
           var target = e.target
@@ -331,20 +352,26 @@ import uploadimg from './uploadimg'
               this.mycomponents.push('addimg')
               this.inputdata.push([])
               break
-            case '4' :
-              this.mycomponents.push('addcoverimg')
-              this.inputdata.push({})
-              break
+            // case '4' :
+            //   this.mycomponents.push('addcoverimg')
+            //   this.inputdata.push({})
+            //   break
           }
         }
       },
       data () {
         return {
+          title:'',
+          summary:'',
+          coverimg:[],
           mycomponents: [],
           inputdata:[],
           postdata:[],
           post_click:false,
-          postnote:'发布页面'
+          postnote:'发布页面',
+          title_note:'',
+          summary_note:'',
+          coverimg_note:''
         }
       }
     }
@@ -384,6 +411,9 @@ import uploadimg from './uploadimg'
 .note{
   margin-right: 1rem;
 }
+.warn{
+  color:orange;
+}
 .add_input{
   width:100%;
 }
@@ -394,9 +424,11 @@ import uploadimg from './uploadimg'
   flex-direction: column;
   align-items: flex-start;
 }
-.btn{
+.post_btn{
   width: 4rem;
   height: 4rem;
+  text-align: center;
+  padding:0;
 }
 .add-content{
   width: 100%;
