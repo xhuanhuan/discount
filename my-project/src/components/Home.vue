@@ -36,7 +36,9 @@
                       v-else @click.stop="changeShopInfo(userinfo._id,index)">加关注</Button>
             </div>
              <div class="cover">
-               <img :src="myconfig.baseurl+activity.activitycontent[2].coverimg" class="cover-img">
+               <div class="cover-img-container">
+                 <img :src="myconfig.baseurl+activity.activitycontent[2].coverimg" class="cover-img">
+               </div>
                <div class="activity-Info">
               <p>{{activity.activitycontent[0].title}}</p>
               <p>{{activity.activitycontent[1].content}}</p>
@@ -106,9 +108,6 @@ export default {
       this.$router.push({name:'citypicker',query:{currentCity:this.userinfo.location||this.currentCity}})
     },
     toShopPage:function (shopId) {
-      console.log(this.myconfig)
-      // var userId=this.userinfo._id
-      // var userName=this.userinfo.username
       this.$router.push({name:'shop',query:{id:shopId}})
     },
     toActivityPage: function (activityId) {
@@ -242,7 +241,6 @@ export default {
 .block{
   box-sizing: border-box;
   width:100%;
-  height:370px;
   background-color: white;
   margin:20px 0;
   padding:5px;
@@ -283,12 +281,15 @@ export default {
 .cover{
   background-color: #f5f7f9;
   width:100%;
-  height:75%;
-  margin:0 auto;
+  margin:5px auto;
+}
+.cover-img-container{
+  width:100%;
+  max-height:250px;
+  overflow: hidden;
 }
 .cover-img{
   width:100%;
-  height:80%;
 }
 .control{
   width:100%;
@@ -299,7 +300,7 @@ export default {
 }
 .activity-Info{
   width:100%;
-  padding: 0 5px;
+  padding: 5px;
 }
 .eye{
   color: #9ea7b4;

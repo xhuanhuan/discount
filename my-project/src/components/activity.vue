@@ -17,8 +17,9 @@
           <span class="shopName">{{activityInfo.shopname}}</span>
         </div>
         <div class="acti-body">
-          <div v-for="item in activityInfo.activitycontent">
-          <h3 v-if="item.title">{{item.title}}<span class="post-time">{{activityInfo.posttime}}</span></h3>
+          <div v-for="(item,index) in activityInfo.activitycontent">
+          <h3 v-if="item.title&&index==0">{{item.title}}<span class="post-time">{{activityInfo.posttime}}</span></h3>
+          <h4 v-if="item.title&&index>0">{{item.title}}</h4>
           <p v-if="item.content">{{item.content}}</p>
           <div v-if="item instanceof Array" class="img-container" v-for="url in item">
             <img class="img" :src="myconfig.baseurl+url">

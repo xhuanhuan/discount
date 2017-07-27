@@ -138,7 +138,7 @@
       </div>
       <div class="app-content" v-if="sellected === 1">
         <div class="block" v-for="(item,index) in personal.shopsInfo" v-on:click="toShopPage(item.shopId)">
-        <Follows :shopInfo="item" v-on:remove="removeShop(index)"></Follows>
+        <Follows :shopInfo="item" :baseurl="myconfig.baseurl" v-on:remove="removeShop(index)"></Follows>
         </div>
       </div>
       <div class="app-content" v-else>
@@ -170,12 +170,12 @@ import ajax from '../utils/ajax';
         'Follows': {
           template: `<div class="follows_container">
           <div :style="container1">
-          <img :src="shopInfo.headImg" :style="headimgStyle">
+          <img :src="shopInfo.headImg.indexOf('http')===-1?baseurl+shopInfo.headImg:shopInfo.headImg" :style="headimgStyle">
           <span :style="shopnameStyle">{{shopInfo.shopName}}</span>
           </div>
           <Button shape="circle" v-on:click.stop="remove">取消关注</Button>
           </div>`,
-          props: ['shopInfo'],
+          props: ['shopInfo','baseurl'],
           methods: {
             remove: function () {
               this.$emit('remove')
@@ -476,7 +476,7 @@ li:last-child{
 .setandsistem{
   width:100%;
   height:3rem;
-  background-color: rgba(0, 168, 159, 0.8);
+  background-color: rgb(169,200,221);
   padding: 0.5rem 1rem;
   position: fixed;
   top:0;

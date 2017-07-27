@@ -314,7 +314,7 @@ import uploadimg from './uploadimg'
                 },2000)
               }
             }
-            // ajax(data,url,'post',handler)
+            ajax(data,url,'post',handler)
           })
         },
         gettitle:function(obj){

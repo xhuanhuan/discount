@@ -1375,6 +1375,9 @@ export default {
 </script>
 
 <style scoped>
+.ivu-collapse-content-box{
+  padding:0;
+}
 .citypicker-header{
   width:100%;
   height:3rem;
@@ -1385,6 +1388,7 @@ export default {
   display:flex;
   align-items: center;
   padding-left: 1rem;
+  z-index:1001;
 }
 .citypicker-body{
   width:100%;
