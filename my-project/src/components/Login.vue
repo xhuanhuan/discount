@@ -73,6 +73,8 @@
                       if(data.login==='success'){
                         console.log("登录成功")
                         window.localStorage.discountToken=data.token
+                        sessionStorage.discount_userid=data.userid
+                        sessionStorage.discount_username=data.username
                         that.$router.push({path:'/home'})
                       }else if(data.login==='fail'){
                           console.log("用户不存在，请先注册")

@@ -7,11 +7,11 @@ var user=require('../models/user');
 router.post('/', function(req, res, next) {
   res.set('Access-Control-Allow-Origin', '*');
   var data=JSON.parse(Object.keys(req.body)[0]);
-  user.find({username:data.username},function(err,doc){
+  user.findOne({username:data.username},function(err,doc){
     if(err){
       next(err);
     }
-    if(doc.length===0){
+    if(!doc){
       let info = {
         login: 'fail',
         token: ''
@@ -21,7 +21,9 @@ router.post('/', function(req, res, next) {
     }else{
       let info = {
         login: 'success',
-        token: jwt.encode(data.username)
+        token: jwt.encode(data.username),
+        userid:doc._id,
+        username:doc.username
       }
       res.send(JSON.stringify(info));
     }

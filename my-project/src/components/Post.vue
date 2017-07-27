@@ -339,10 +339,8 @@ import uploadimg from './uploadimg'
           }
           switch (target.dataset.index) {
             case '1' :
-              if(this.mycomponents.length==0){
                 this.mycomponents.push('addtitle')
                 this.inputdata.push({})
-              }
               break
             case '2' :
               this.mycomponents.push('addtext')

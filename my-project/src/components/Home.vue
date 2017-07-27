@@ -95,8 +95,7 @@ export default {
       if(resobj.userinfo){
         this.userinfo = resobj.userinfo;
       }
-      console.log(this.userinfo)
-      console.log(this.activities)
+      console.log(this.userinfo,this.activities)
       this.loading=false
     }).then(function(){
       console.log(123)
@@ -104,21 +103,24 @@ export default {
   },
   methods: {
     cityPicker:function(){
-      // this.pickcity=true
       this.$router.push({name:'citypicker',query:{currentCity:this.userinfo.location||this.currentCity}})
     },
     toShopPage:function (shopId) {
       console.log(this.myconfig)
-      var userId=this.userinfo._id
-      var userName=this.userinfo.username
-      this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
+      // var userId=this.userinfo._id
+      // var userName=this.userinfo.username
+      this.$router.push({name:'shop',query:{id:shopId}})
     },
     toActivityPage: function (activityId) {
       var userId=this.userinfo._id
       var userName=this.userinfo.username
-      this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
+      this.$router.push({name:'activity',query:{id:activityId}})
     },
     changeShopInfo:function(userId,index){
+      if(localStorage.discountToken.length===0){
+        alert('您还没有登录')
+        return
+      }
       clearTimeout(this.timer)
       this.timer=null
       this.activities[index].isFansTmp=!this.activities[index].isFansTmp
@@ -146,6 +148,10 @@ export default {
       },2000)
     },
     setStaticsInfo:function (index,note,isadd) {
+      if(localStorage.discountToken.length===0){
+        alert('您还没有登录')
+        return
+      }
       clearTimeout(this.timer)
       this.timer=null
       if(note==='likes'){

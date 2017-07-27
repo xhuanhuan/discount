@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Vuex from 'vuex'
 // import Hello from '@/components/Hello'
 import Home from '@/components/Home'
 import Post from '@/components/Post'
@@ -15,6 +16,7 @@ import openshop from '@/components/OpenShop'
 import uploadimg_iview from '@/components/uploadimg_iview'
 
 Vue.use(Router)
+Vue.use(Vuex)
 
 export default new Router({
   routes: [

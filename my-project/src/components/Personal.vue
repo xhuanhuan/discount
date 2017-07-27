@@ -371,17 +371,19 @@ import ajax from '../utils/ajax';
           ajax(data,url,'post',handler)
         },
         toShopPage: function(shopId){
-          var userId=this.personal.userInfo._id
-          var userName=this.personal.userInfo.username
-          this.$router.push({name:'shop',query:{id:shopId},params:{userId:userId,userName:userName}})
+          // var userId=this.personal.userInfo._id
+          // var userName=this.personal.userInfo.username
+          this.$router.push({name:'shop',query:{id:shopId}})
         },
         toActivityPage: function(activityId){
-            var userId=this.personal.userInfo._id
-            var userName=this.personal.userInfo.username
-            this.$router.push({name:'activity',query:{id:activityId},params:{userId:userId,userName:userName}})
+            // var userId=this.personal.userInfo._id
+            // var userName=this.personal.userInfo.username
+            this.$router.push({name:'activity',query:{id:activityId}})
         },
         logOut: function () {
           window.localStorage.discountToken=''
+          sessionStorage.discount_userid=''
+          sessionStorage.discount_username=''
           this.$router.push({path:'/login'})
         }
       },

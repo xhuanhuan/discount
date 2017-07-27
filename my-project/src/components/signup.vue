@@ -94,6 +94,8 @@
                           console.log("注册成功")
                           that.$router.push({path:'/home'})
                           window.localStorage.discountToken = data.token
+                          sessionStorage.discount_userid=data.userid
+                          sessionStorage.discount_username=data.username
                           // that.$router.go('/home');
                         }else if(data.register==='fail'){
                             console.log("注册失败")

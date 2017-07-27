@@ -50,7 +50,9 @@ router.post('/', function(req, res, next) {
     }else{
       let info = {
         register:'success',
-        token:jwt.encode(data.username)
+        token:jwt.encode(data.username),
+        userid:data._id,
+        username:data.username
       }
       res.send(JSON.stringify(info));
    }

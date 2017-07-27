@@ -148,6 +148,10 @@ export default {
   },
   methods: {
     changeActivityInfo:function(userId,note){
+      if(this.userId.length===0){
+        alert('您还没有登录')
+        return
+      }
       clearTimeout(this.timer)
       if(note==='likes'){
         this.isLikeTmp=!this.isLikeTmp
@@ -205,6 +209,10 @@ export default {
       }
     },
     enterComment: function () {
+      if(this.userId.length===0){
+        alert('您还没有登录')
+        return
+      }
       if(!this.commentContent){
         this.showNote=false
       }else{
@@ -237,9 +245,10 @@ export default {
     }
   },
   created:function(){
+    console.log(window.sessionStorage.discount)
     this.activityId=this.$route.query.id;
-    this.userId=this.$route.params.userId
-    this.userName=this.$route.params.userName
+    this.userId=window.sessionStorage.discount_userid
+    this.userName=window.sessionStorage.discount_username
     var that=this
     var data={
       activityId:this.activityId,

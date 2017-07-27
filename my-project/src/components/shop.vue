@@ -154,15 +154,14 @@ import footer from './footer'
         }
       },
       created:function(){
+        console.log(window.sessionStorage.discount)
         var shopId=this.$route.query.id;
-        var userId=this.$route.params.userId
-        var userName=this.$route.params.userName
-        this.userId=userId
-        this.userName=userName
+        this.userId=sessionStorage.discount_userid
+        this.userName=sessionStorage.discount_username
         var that=this
         var data={
           shopId:shopId,
-          userId:userId
+          userId:this.userId
         }
         var url=this.myconfig.baseurl+'/shop';
         var handler=function(res){
@@ -184,6 +183,10 @@ import footer from './footer'
       },
       methods: {
         changeShopInfo:function(userId){
+          if(this.userId.length===0){
+            alert('您还没有登录')
+            return
+          }
           clearTimeout(this.timer)
           this.timer=null
           this.isFansTmp=!this.isFansTmp
@@ -224,7 +227,7 @@ import footer from './footer'
           this.shopInfo.activities=activities
         },
         toActivitiyPage: function (activityId) {
-          this.$router.push({name:'activity',query:{id:activityId},params:{userId:this.userId,userName:this.userName}})
+          this.$router.push({name:'activity',query:{id:activityId}})
         },
         toPostPage: function () {
             this.$router.push({name:'post',query:{shopid:this.$route.query.id}})
