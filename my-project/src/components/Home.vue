@@ -40,7 +40,7 @@
                  <img :src="myconfig.baseurl+activity.activitycontent[2].coverimg" class="cover-img">
                </div>
                <div class="activity-Info">
-              <p>{{activity.activitycontent[0].title}}</p>
+              <h5>{{activity.activitycontent[0].title}}</h5>
               <p>{{activity.activitycontent[1].content}}</p>
             </div>
             </div>
@@ -87,7 +87,7 @@ export default {
     var that=this
     ajax(
     {
-      usernameToken:window.localStorage.discountToken,
+      usernameToken:window.localStorage.discountToken||'',
     },
     this.myconfig.baseurl+"/home",
     "post",

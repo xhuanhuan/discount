@@ -231,7 +231,7 @@ import ajax from '../utils/ajax';
       created: function(){
         var that=this
         let data={
-          userNameToken:localStorage.discountToken
+          userNameToken:localStorage.discountToken||''
         }
         let url=this.myconfig.baseurl+'/personal';
         let handler=function(res){
