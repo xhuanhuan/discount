@@ -114,6 +114,7 @@
 .comments-line{
   padding:0.5rem;
   border-bottom: 1px solid #e3e8ee;
+  word-break:break-all;
 }
 .person{
   color: #3399ff;
