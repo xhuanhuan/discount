@@ -16,7 +16,7 @@ var jwt = require('../models/jwt_auth');
 // })
 
 //解读x-www-form-urlencoded信息,重新解读req.body
-router.post('/',function(req,res,next){
+router.post('/',function(req,res,next){console.log(1)
 	req.body = JSON.parse(Object.keys(req.body)[0]);
 	next();
 })
@@ -26,10 +26,10 @@ router.post('/',function(req,res,next){
 	  next();
 	});
 })
-router.post('/',function(req,res,next){
-	if(req.body.usernameToken&&jwt.decode(req.body.usernameToken)){
+router.post('/',function(req,res,next){console.log(2)
+	if(req.body.usernameToken&&jwt.decode(req.body.usernameToken).iss){
 		var username=jwt.decode(req.body.usernameToken).iss
-		console.log(jwt.decode(req.body.usernameToken))
+		console.log(username)
     userinfo.findOne({username:username},function(err,doc){
 			if(doc){
 				req.result2 = doc.toObject();
@@ -43,7 +43,7 @@ router.post('/',function(req,res,next){
 		next()
 	}
 })
-router.post('/',function(req,res,next){
+router.post('/',function(req,res,next){console.log(3)
 	var info = {};
 	if(req.result2){
     	info.userinfo = req.result2
@@ -81,5 +81,15 @@ router.post('/',function(req,res,next){
 		console.log(info)
 		res.send(JSON.stringify(info));
 	}
+})
+router.post(function(err,req, res, next) {
+  let info = {
+    register:'err',
+    token:''
+  }
+  console.log(err)
+  // res.status(500);
+  // res.render('error', { error: err });
+  res.send(JSON.stringify(info));
 })
 module.exports = router;

@@ -224,7 +224,7 @@ import ajax from '../utils/ajax';
           if(window.localStorage.discountToken.length>0){
             return false
           }
-          this.$router.push({path:'/login'})
+          //this.$router.push({path:'/login'})
           return false
         }
       },
@@ -236,6 +236,9 @@ import ajax from '../utils/ajax';
         let url=this.myconfig.baseurl+'/personal';
         let handler=function(res){
           var data=JSON.parse(res)
+          if(data.getPersonalInfo==='fail'){
+            that.$router.push({path:'/login'})
+          }
           that.personal=data
           that.personalinfo = data.userInfo.personalinfo
           that.personalinfo.headimg = that.personalinfo.headimg.indexOf("http")===-1? that.myconfig.baseurl+that.personalinfo.headimg:that.personalinfo.headimg

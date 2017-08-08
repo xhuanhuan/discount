@@ -96,6 +96,8 @@ export default {
       this.activities=resobj.activityinfo
       if(resobj.userinfo){
         this.userinfo = resobj.userinfo;
+        sessionStorage.discount_userid=this.userinfo._id
+        sessionStorage.discount_username=this.userinfo.username
       }
       console.log(this.userinfo,this.activities)
       this.loading=false

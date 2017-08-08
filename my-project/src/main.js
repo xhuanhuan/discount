@@ -7,10 +7,12 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import AMap from 'vue-amap'
 import {config} from './config'
+import Vuex from 'vuex'
 
 Vue.use(config)
 Vue.use(AMap)
 Vue.use(iView)
+Vue.use(Vuex)
 Vue.config.productionTip = false
 
 // 初始化vue-amap

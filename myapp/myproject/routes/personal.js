@@ -20,6 +20,7 @@ router.post('/',function(req, res, next){
       req.userInfo=null
       let info = {
         getPersonalInfo: 'fail',
+        userInfo:req.userInfo
       }
       res.send(JSON.stringify(info));
     }
