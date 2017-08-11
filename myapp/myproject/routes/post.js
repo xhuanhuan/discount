@@ -7,7 +7,7 @@ var activity=require('../models/activity');
 
 //find shop
 router.post('/', function(req, res, next) {
-  res.set('Access-Control-Allow-Origin', '*');
+  // res.set('Access-Control-Allow-Origin', '*');
   var data=JSON.parse(Object.keys(req.body)[0]);
   req.dataGet=data
   shop.findOne({_id:data.shopid},function(err,doc){
@@ -59,14 +59,5 @@ router.post('/', function(req, res, next) {
   }
   res.send(JSON.stringify(info))
 })
-router.post(function(err,req, res, next) {
-  let info = {
-    register:'err',
-    token:''
-  }
-  console.log(err)
-  // res.status(500);
-  // res.render('error', { error: err });
-  res.send(JSON.stringify(info));
-})
+
 module.exports = router;

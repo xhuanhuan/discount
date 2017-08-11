@@ -159,6 +159,7 @@ import activity from './activity'
 import shop from './shop'
 import login from './Login'
 import footer from './footer'
+import canvas from './canvas'
 import ajax from '../utils/ajax';
     export default {
       name: 'footer',
@@ -170,11 +171,16 @@ import ajax from '../utils/ajax';
         'Follows': {
           template: `<div class="follows_container">
           <div :style="container1">
-          <img :src="shopInfo.headImg.indexOf('http')===-1?baseurl+shopInfo.headImg:shopInfo.headImg" :style="headimgStyle">
+          <div :style="headimgStyle">
+          <canvas-component :originUrl="shopInfo.headImg.indexOf('http')===-1?baseurl+shopInfo.headImg:shopInfo.headImg"></canvas-component>
+          </div>
           <span :style="shopnameStyle">{{shopInfo.shopName}}</span>
           </div>
           <Button shape="circle" v-on:click.stop="remove">取消关注</Button>
           </div>`,
+          components:{
+            'canvas-component':canvas
+          },
           props: ['shopInfo','baseurl'],
           methods: {
             remove: function () {
@@ -200,7 +206,9 @@ import ajax from '../utils/ajax';
         },
         'Collects': {
           template: `<div class="collects_container">
-          <img :src="baseurl+activityInfo.activityContent[2].coverimg" style="width:8rem;height:8rem;">
+          <div :style="headimgStyle">
+          <canvas-component :originUrl="activityInfo.activityContent[2].coverimg.indexOf('http')===-1?baseurl+activityInfo.activityContent[2].coverimg:activityInfo.activityContent[2].coverimg"></canvas-component>
+          </div>
           <div style="width:10rem;height:8rem;overflow:auto">
           <h3 style="color:#5cadff" @click.stop="toShop">{{activityInfo.shopName}}</h3>
           <h4>{{activityInfo.activityContent[0].title}}</h4>
@@ -208,7 +216,18 @@ import ajax from '../utils/ajax';
           </div>
             <Button icon="close" shape="circle" size="small" v-on:click.stop="remove"></Button>
           </div>`,
+          components:{
+            'canvas-component':canvas
+          },
           props: ['activityInfo','baseurl'],
+          data () {
+            return {
+              headimgStyle: {
+                width:'8rem',
+                height:'8rem'
+              }
+            }
+          },
           methods: {
             toShop: function () {
               this.$emit('toShop')

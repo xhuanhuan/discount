@@ -59,15 +59,5 @@ router.post('/',function(req, res, next){
   }
   res.send(JSON.stringify(info));
 });
-router.post(function(err,req, res, next) {
-  let info = {
-    getShopInfo:'err',
-    shopInfo:'something wrong'
-  }
-  console.log(err)
-  // res.status(500);
-  // res.render('error', { error: err });
-  res.set('Access-Control-Allow-Origin', '*');
-  res.send(JSON.stringify(info));
-})
+
 module.exports = router;

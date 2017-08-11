@@ -7,7 +7,7 @@ var shop=require('../models/shop');
 
 //check user
 router.post('/', function(req, res, next) {
-  res.set('Access-Control-Allow-Origin', '*');
+  // res.set('Access-Control-Allow-Origin', '*');
   req.dataGet=JSON.parse(Object.keys(req.body)[0]);
   user.findOne({_id:req.dataGet.userid},function(err,doc){
     if(err){
@@ -76,14 +76,5 @@ router.post('/', function(req, res, next) {
     res.send(JSON.stringify(info));
   })
 });
-router.post(function(err,req, res, next) {
-  let info = {
-    openshop:'err',
-    token:''
-  }
-  console.log(err)
-  // res.status(500);
-  // res.render('error', { error: err });
-  res.send(JSON.stringify(info));
-})
+
 module.exports = router;

@@ -4,7 +4,7 @@ var activity=require('../models/activity');
 var user=require('../models/user');
 
 router.post('/',function(req, res, next){
-  res.set('Access-Control-Allow-Origin', '*');
+  // res.set('Access-Control-Allow-Origin', '*');
   req.dataGet=JSON.parse(Object.keys(req.body)[0]);
   user.findOne({_id:req.dataGet.userId},function(err,doc){
     if(err){
@@ -73,14 +73,4 @@ router.post('/',function(req, res, next){
       res.send(JSON.stringify(info));
   }
 });
-router.post(function(err,req, res, next) {
-  let info = {
-    setactivityInfo:'err',
-  }
-  console.log(err)
-  // res.status(500);
-  // res.render('error', { error: err });
-  res.set('Access-Control-Allow-Origin', '*');
-  res.send(JSON.stringify(info));
-})
 module.exports = router;
